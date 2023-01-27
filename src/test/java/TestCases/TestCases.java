@@ -33,15 +33,32 @@ public class TestCases extends BaseTest {
 	public static void Test_Login_Page_Content() {
 		try {
 			LoginPage loginPage = new LoginPage(driver);
+			String actualTitle = driver.getTitle();
+			if(actualTitle.equalsIgnoreCase("Exxon"))
+				test.log(LogStatus.PASS, "Title matched as EXXON");
+			else
+				test.log(LogStatus.FAIL, "Title did not match");
 			
-			if(loginPage.emailTextBox.isDisplayed()){
+			if(loginPage.loginForm.isDisplayed())
+				test.log(LogStatus.PASS, "Login page is displayed");
+			else
+				test.log(LogStatus.FAIL, "Login page is not displayed");
+			
+			if(loginPage.emailTextBox.isDisplayed())
 				test.log(LogStatus.PASS, "Email text box is displayed");	
-			}else {
+			else 
 				test.log(LogStatus.FAIL, "Email text box is not displayed");			
-			}
 			
+			if(loginPage.passwordTextBox.isDisplayed())
+				test.log(LogStatus.PASS, "Password text box is displayed");
+			else
+				test.log(LogStatus.FAIL, "Password text box is not displayed");
+			
+			if(loginPage.loginButton.isDisplayed())
+				test.log(LogStatus.PASS, "Login button is displayed");
+			else
+				test.log(LogStatus.FAIL, "Login button is not displayed");
 				
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());

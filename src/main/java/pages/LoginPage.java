@@ -28,13 +28,13 @@ public class LoginPage extends PageBase {
 	@CacheLookup
 	public  WebElement passwordTextBox;
 	
-	@FindBy(xpath = "(//*[@class='Tooltip_tip__1AmT_']//following::ul/*)[2]")
+	@FindBy(id = "terms")
 	@CacheLookup
-	public  WebElement editOption;
+	public  WebElement loginButton;
 	
-	@FindBy(xpath = "(//*[@class='Button_root__1hsq2 Button_variant-contained__3XbRQ Button_color-primary__Hkfvx'])[2]")
+	@FindBy(xpath = "//div[@class='login-page']")
 	@CacheLookup
-	public  WebElement runDomainAdaptationButton;
+	public  WebElement loginForm;
 	
 	
 	

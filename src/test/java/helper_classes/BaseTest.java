@@ -37,6 +37,7 @@ public class BaseTest {
 		wd.setUpDriver(BrowserType.Chrome);
 		test.log(LogStatus.INFO, "Chrome Launch successfully");
 		ObjectRepo.driver.get(ObjectRepo.reader.getWebsite());
+		
 	}
 	
 	@AfterTest
