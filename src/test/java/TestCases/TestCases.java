@@ -33,11 +33,7 @@ public class TestCases extends BaseTest {
 		
 		System.out.println("running test");
 		try {
-			System.out.println("Launching "+browser+" browser");
-			InitializeWebDriver wd = new InitializeWebDriver();
 			
-				  wd.setUpDriver(BrowserType.Chrome);
-				  test.log(LogStatus.INFO, "Chrome Launch successfully");
 				    
 			
 		}catch(Exception e) {

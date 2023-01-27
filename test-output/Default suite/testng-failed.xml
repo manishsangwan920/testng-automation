@@ -6,6 +6,8 @@
       <class name="TestCases.TestCases">
         <methods>
           <include name="setUp"/>
+          <include name="beforeTest"/>
+          <include name="afterTest"/>
           <include name="endReport"/>
           <include name="test"/>
         </methods>

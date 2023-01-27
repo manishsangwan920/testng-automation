@@ -28,20 +28,9 @@ public class GenericHelper {
 
 	public static String getTestData(String var) {
 		try {
-			int colno=0;
-			for (int l = 1; l <= ObjectRepo.testDataVariables.getLastCellNum(); l++) {
-				if(ObjectRepo.testDataVariables.getCell(l).getStringCellValue().equalsIgnoreCase(var)) {
-					colno=l;
-		    		break;
-		    	}
-			}
 			
-			if(colno==0) {
-				ObjectRepo.test.log(LogStatus.FAIL, "Test Data not found. Please check Data Variable");
-				throw new Exception("Data not found");
-			}else {
-				return ObjectRepo.testData.getCell(colno).getStringCellValue(); 
-			}
+			return null;
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;

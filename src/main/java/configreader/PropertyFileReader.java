@@ -29,7 +29,7 @@ public class PropertyFileReader implements IconfigReader {
 	}
 
 	public String getWebsite() {
-		return prop.getProperty(ObjectRepo.Environment+"_"+ObjectRepo.Instance+"_Website");
+		return prop.getProperty("url");
 	}
 	
 	public String getExecutionEnv() {

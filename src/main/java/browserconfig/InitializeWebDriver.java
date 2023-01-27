@@ -65,8 +65,6 @@ public class InitializeWebDriver {
 	public static void tearDownDriver(){
 		try {
 			if (ObjectRepo.driver != null) {
-				ObjectRepo.testData=null;
-				ObjectRepo.testData=null;
 				ObjectRepo.driver.quit();
 				ObjectRepo.reader = null;
 				ObjectRepo.driver = null;

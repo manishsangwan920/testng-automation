@@ -18,8 +18,6 @@ public class ObjectRepo {
 	public static IconfigReader reader;
 	public static ExtentTest test;
 	public static ExtentReports report;
-	public static Row testDataVariables;
-	public static Row testData;
 	public static String browser;
 	public static String Environment;
 	public static String Instance;
