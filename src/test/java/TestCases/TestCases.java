@@ -15,6 +15,7 @@ import browserconfig.InitializeWebDriver;
 import configreader.ExcelReader;
 import configreader.PropertyFileReader;
 import exception.NoSuitableDriverFoundException;
+import helper_classes.BaseTest;
 import reporting.ExtentReportHelper;
 import settings.ObjectRepo;
 
@@ -25,23 +26,7 @@ import settings.ObjectRepo;
 ********************************************************************************************************/
 
 
-public class TestCases {
-	
-	@BeforeSuite
-	public void setUp() {
-		System.out.println("Setting Up Test Suite");
-		ExtentReportHelper.setUpReport();
-		ObjectRepo.reader = new PropertyFileReader();
-	}
-	
-	@AfterSuite
-	public static void endReport() throws EmailException {
-		ExtentReportHelper.endReport();
-		
-		ObjectRepo.reader=null;
-		System.out.println("Test Suite Execution Complete");
-
-	}
+public class TestCases extends BaseTest {
 	
 	@Test
 	public static void test() {

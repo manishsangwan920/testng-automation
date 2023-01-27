@@ -3,12 +3,10 @@
 <suite name="Suite">
 	<test thread-count="5" name="Test">
 		<classes>
-			<class name="com.framework.TestCases.TestCases" />
+			<class name="TestCases.TestCases" />
 		</classes>
 	</test>
-	<listeners>
-		<listener class-name="com.framework.Runner.RunTimeTransformer"></listener>
-	</listeners>
+	
 </suite> 
      
  
