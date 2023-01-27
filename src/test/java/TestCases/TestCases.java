@@ -1,5 +1,5 @@
 package TestCases;
-
+import static settings.ObjectRepo.driver;
 import org.apache.commons.mail.EmailException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +16,7 @@ import configreader.ExcelReader;
 import configreader.PropertyFileReader;
 import exception.NoSuitableDriverFoundException;
 import helper_classes.BaseTest;
+import pages.LoginPage;
 import reporting.ExtentReportHelper;
 import settings.ObjectRepo;
 
@@ -29,16 +30,21 @@ import settings.ObjectRepo;
 public class TestCases extends BaseTest {
 	
 	@Test
-	public static void test() {
-		
-		System.out.println("running test");
+	public static void Test_Login_Page_Content() {
 		try {
+			LoginPage loginPage = new LoginPage(driver);
 			
-				    
+			if(loginPage.emailTextBox.isDisplayed()){
+				test.log(LogStatus.PASS, "Email text box is displayed");	
+			}else {
+				test.log(LogStatus.FAIL, "Email text box is not displayed");			
+			}
+			
+				
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			test.log(LogStatus.FAIL, "Unable to launch Browser");
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 		
 	}

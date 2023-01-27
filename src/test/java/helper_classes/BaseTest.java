@@ -42,6 +42,7 @@ public class BaseTest {
 	@AfterTest
 	public void afterTest() {
 		System.out.println("finished Test");
+		ObjectRepo.driver.quit();
 		ExtentReportHelper.endTest();
 	}
 	
