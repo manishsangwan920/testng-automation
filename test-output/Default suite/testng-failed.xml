@@ -9,7 +9,7 @@
           <include name="beforeTest"/>
           <include name="afterTest"/>
           <include name="endReport"/>
-          <include name="test"/>
+          <include name="Test_Login_Page_Content"/>
         </methods>
       </class> <!-- TestCases.TestCases -->
     </classes>

@@ -19,6 +19,7 @@ import helper_classes.BaseTest;
 import pages.LoginPage;
 import reporting.ExtentReportHelper;
 import settings.ObjectRepo;
+import stepdefination.Stepdefination;
 
 
 /*******************************************************************************************************
@@ -31,44 +32,74 @@ public class TestCases extends BaseTest {
 	
 	@Test
 	public static void Test_Login_Page_Content() {
-		try {
-			LoginPage loginPage = new LoginPage(driver);
-			String actualTitle = driver.getTitle();
-			if(actualTitle.equalsIgnoreCase("Exxon"))
-				test.log(LogStatus.PASS, "Title matched as EXXON");
-			else
-				test.log(LogStatus.FAIL, "Title did not match");
-			
-			if(loginPage.loginForm.isDisplayed())
-				test.log(LogStatus.PASS, "Login page is displayed");
-			else
-				test.log(LogStatus.FAIL, "Login page is not displayed");
-			
-			if(loginPage.emailTextBox.isDisplayed())
-				test.log(LogStatus.PASS, "Email text box is displayed");	
-			else 
-				test.log(LogStatus.FAIL, "Email text box is not displayed");			
-			
-			if(loginPage.passwordTextBox.isDisplayed())
-				test.log(LogStatus.PASS, "Password text box is displayed");
-			else
-				test.log(LogStatus.FAIL, "Password text box is not displayed");
-			
-			if(loginPage.loginButton.isDisplayed())
-				test.log(LogStatus.PASS, "Login button is displayed");
-			else
-				test.log(LogStatus.FAIL, "Login button is not displayed");
-				
-		}catch(Exception e) {
-			e.printStackTrace();
-			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
-		}
-		
+		Stepdefination.LoginPageContents();
 	}
 	
+	@Test
+	public static void Test_Login_With_Valid_Data_For_Existing_User() throws Exception {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+	}
 	
+	@Test
+	public static void Test_Login_With_Invalid_Data_For_Existing_User() throws Exception {
+		Stepdefination.VerifyInvalidLogin("arikshit.yugasa@gmail.com" ,"Adi@123");
+		driver.close();
+	}
 	
-}  
+	@Test
+	public static void Test_Login_without_Accepting_Terms_And_Conditions() {
+		Stepdefination.LoginWithoutTermsCheckbox("parikshit.yugasa@gmail.com" ,"Adi@123");	
+	}
+	
+	@Test
+	public static void Test_Login_without_Entering_Any_Credentials() {
+		Stepdefination.LoginWithoutCredentials();
+	}
+	
+	@Test
+	public static void Test_Terms_And_Condition_Is_Clickable_And_Return_Expected_Content() {
+		Stepdefination.TermsAndCondition();
+	}
+	
+	@Test
+	public static void  Forgot_Password_Link_Is_Clickable_And_Functional() {
+		Stepdefination.ForgetPassword();
+	}
+	
+	@Test
+	public static void User_Is_Able_To_See_And_Accept_cookies() {
+		Stepdefination.AcceptCookies();
+	}
+	
+	@Test
+	public static void User_Is_Able_To_See_Dashboard() {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+		Stepdefination.DashboardIsPresent();
+	}  
 
-
-
+	@Test
+	public static void Welcome_Distributers_Name() {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+		Stepdefination.WelcomeDistibutersName();
+	}
+	
+	@Test
+	public static void Are_Profile_ResetPassword_Logout_Present() {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+		Stepdefination.profileAndRestPassword();
+	}
+	
+	@Test
+	public static void Upload_Profile_Picture_And_Save_It() {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+		Stepdefination.UploadProfilePicture();
+	}
+	
+	@Test
+	public static void Edit_Profile_Picture_After_Uploading_And_Saving_Different_Picture_First() {
+		Stepdefination.LoginApplication("parikshit.yugasa@gmail.com" ,"Adi@123","Dashboard");
+		Stepdefination.EditProfilePicture();
+	}
+	
+		
+}

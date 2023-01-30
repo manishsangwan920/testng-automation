@@ -3,14 +3,17 @@ package helper_classes;
 import static settings.ObjectRepo.browser;
 import static settings.ObjectRepo.test;
 
+import java.lang.reflect.Method;
 import java.sql.Driver;
 
 import org.apache.commons.mail.EmailException;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
-
+import static settings.ObjectRepo.driver;
 import com.relevantcodes.extentreports.LogStatus;
 
 import browserconfig.BrowserType;
@@ -28,16 +31,16 @@ public class BaseTest {
 		ObjectRepo.reader = new PropertyFileReader();
 	}
 	
-	@BeforeTest
-	public void beforeTest() throws Exception {
+	@BeforeMethod
+	public void beforeTest(Method testMethod) throws Exception {
 		System.out.println("Executing Test");
-		ExtentReportHelper.startTest("Test name");
+		ExtentReportHelper.startTest(testMethod.getName());
 		System.out.println("Launching "+browser+" browser");
 		InitializeWebDriver wd = new InitializeWebDriver();
 		wd.setUpDriver(BrowserType.Chrome);
 		test.log(LogStatus.INFO, "Chrome Launch successfully");
 		ObjectRepo.driver.get(ObjectRepo.reader.getWebsite());
-		
+		test.log(LogStatus.INFO, "Exxon Application Launch successfully");
 	}
 	
 	@AfterTest
