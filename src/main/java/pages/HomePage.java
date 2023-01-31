@@ -111,4 +111,32 @@ public class HomePage extends PageBase {
 	@FindBy(xpath = "//a[contains(text(),'Logout ')]")
 	@CacheLookup
 	public  WebElement logoutButton;
+	
+	@FindBy(id = "company_name")
+	@CacheLookup
+	public  WebElement companyName ;
+	
+	@FindBy(id = "oldpass")
+	@CacheLookup
+	public  WebElement existingPassword;
+	
+	@FindBy(id = "newpass")
+	@CacheLookup
+	public  WebElement newPassword;
+	
+	@FindBy(id = "confirmpass")
+	@CacheLookup
+	public  WebElement confirmPassword;
+	
+	@FindBy(xpath = "//button[@class='close' and @data-dismiss='modal']")
+	@CacheLookup
+	public  WebElement closeResetPasswordWindow;
+	
+	@FindBy(id = "event2")
+	@CacheLookup
+	public  WebElement resetPasswordSubmit;
+
+	@FindBy(id = "message")
+	@CacheLookup
+	public  WebElement errorMsgPasswordMismatch;
 	}

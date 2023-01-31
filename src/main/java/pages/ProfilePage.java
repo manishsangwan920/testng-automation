@@ -36,5 +36,25 @@ public class ProfilePage extends PageBase {
 	@FindBy(id="getProfilePic")
 	@CacheLookup
 	public  WebElement getProfilePic;
-
+	
+	@FindBy(id="username")
+	@CacheLookup
+	public  WebElement editProfileName;
+	
+	@FindBy(id="phone")
+	@CacheLookup
+	public  WebElement editProfilePhone;
+	
+	@FindBy(id="email")
+	@CacheLookup
+	public  WebElement editProfileEmail;
+	
+	@FindBy(id="company")
+	@CacheLookup
+	public  WebElement editProfileCompany;
+	
+	@FindBy(id="save-id")
+	@CacheLookup
+	public  WebElement editProfileSave;
+	
 }

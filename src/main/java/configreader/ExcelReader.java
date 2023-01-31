@@ -23,87 +23,30 @@ import com.relevantcodes.extentreports.LogStatus;
 public class ExcelReader {
 	
 	
-	public static Sheet readRunManager() throws Exception {
-//		Sheet Instance =ReadExcel(System.getProperty("user.dir")+"/RunManager.xlsm", "InstanceRunSheet");
-//		String InstanceName = Instance.getRow(1).getCell(0).getStringCellValue();
-		try {
-			return ReadExcel(System.getProperty("user.dir")+"/RunManager.xlsm", "Testcase");
-		}catch(Exception e) {
-			System.out.println("Unable to read RunManager sheet");
-			return null;
-		}
-	}
-	
-	public static Sheet readInstance(){
-		try {
-			return ReadExcel(System.getProperty("user.dir")+"/RunManager.xlsm", "InstanceRunSheet");
-		}catch(Exception e) {
-			System.out.println("Unable to read RunManager sheet");
-			return null;
-		}
-	}
 	
 	
-	public static Sheet readTestDate() {
+	
+	
+	public static String ReadTestData(String name) {
 		try {
-			if(ObjectRepo.Environment.equals("QA"))
-				return ReadExcel(System.getProperty("user.dir")+"/QA_TestData.xlsx", "TestData");
-			else if(ObjectRepo.Environment.equals("Prod"))
-				return ReadExcel(System.getProperty("user.dir")+"/Prod_TestData.xlsx", "TestData");
-			else
-				System.out.println("Select QA or Prod as environment in RunManager sheet");
-				return null;
+			
+				Sheet testDataSheet = ReadExcel(System.getProperty("user.dir")+"/src/test/resources/TestData/TestData.xlsx", "TestData");
+				int rowCount = testDataSheet.getLastRowNum();
+	            for(int i =1; i<=rowCount; i++) {
+	            	if(testDataSheet.getRow(i).getCell(0).toString().equals(name)) {
+	            		return testDataSheet.getRow(i).getCell(1).toString();
+	            	}
+	            }
+	            return null;
 		}catch(Exception e) {
 			System.out.println( "Unable to Read Test Data sheet");
 			return null;
 		}
 	}
 	
-	public static Sheet readTestFlow() {
-		try {
-			if(ObjectRepo.Environment.equals("QA"))
-				return ReadExcel(System.getProperty("user.dir")+"/QA_TestData.xlsx", "TestCases");
-			else if(ObjectRepo.Environment.equals("Prod"))
-				return ReadExcel(System.getProperty("user.dir")+"/Prod_TestData.xlsx", "TestCases");
-			else
-				System.out.println("Select QA or Prod as environment in RunManager sheet");
-				return null;
-		}catch(Exception e) {
-			System.out.println("Unable to read TestData sheet");
-			return null;
-		}
-	}
 	
 	
-	public static Sheet readNewTestFlow() {
-		try {
-			if(ObjectRepo.Environment.equals("QA"))
-				return ReadExcel(System.getProperty("user.dir")+"/QA_TestData.xlsx", "NewTestCases");
-			else if(ObjectRepo.Environment.equals("Prod"))
-				return ReadExcel(System.getProperty("user.dir")+"/Prod_TestData.xlsx", "NewTestCases");
-			else
-				System.out.println("Select QA or Prod as environment in RunManager sheet");
-				return null;
-		}catch(Exception e) {
-			System.out.println("Unable to read TestData sheet");
-			return null;
-		}
-	}
 	
-	public static Sheet readQuestions() {
-		try {
-			if(ObjectRepo.Environment.contains("QA"))
-				return ReadExcel(System.getProperty("user.dir")+"/QA_TestData.xlsx", "Questions");
-			else if(ObjectRepo.Environment.contains("Prod"))
-				return ReadExcel(System.getProperty("user.dir")+"/Prod_TestData.xlsx", "Questions");
-			else
-				System.out.println("Select QA or Prod as environment in RunManager sheet");
-				return null;
-		}catch(Exception e) {
-			System.out.println("Unable to read Questions sheet");
-			return null;
-		}
-	}
 	
 	public static Sheet ReadExcel(String filepath, String sheetName) throws Exception {
 		File excelFile =    new File(filepath);

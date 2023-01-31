@@ -7,7 +7,16 @@
         <methods>
           <include name="setUp"/>
           <include name="beforeTest"/>
+          <include name="Test_Login_without_Accepting_Terms_And_Conditions"/>
+          <include name="Test_Login_With_Valid_Data_For_Existing_User"/>
+          <include name="User_Is_Able_To_See_And_Accept_cookies"/>
+          <include name="Test_Terms_And_Condition_Is_Clickable_And_Return_Expected_Content"/>
+          <include name="Test_Login_without_Entering_Any_Credentials"/>
+          <include name="Upload_Profile_Picture_And_Save_It"/>
+          <include name="Welcome_Distributers_Name"/>
+          <include name="Test_Login_With_Invalid_Data_For_Existing_User"/>
           <include name="afterTest"/>
+          <include name="User_Is_Able_To_See_Dashboard"/>
           <include name="endReport"/>
           <include name="Test_Login_Page_Content"/>
         </methods>

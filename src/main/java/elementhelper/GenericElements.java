@@ -110,23 +110,7 @@ public class GenericElements extends ObjectRepo {
 	}
 	
 	
-	public static WebElement getOldOrNewLocator(WebElement oldElement,WebElement NewElement){
-		Sheet Runmgr = ExcelReader.readInstance();
-		String project = Runmgr.getRow(1).getCell(2).toString();
-		if(project.equals("Old")) {
-			return oldElement;
-		}
-		return NewElement;
-	}
 	
-	public static WebElement getTestOrProdLocator(WebElement testElement,WebElement prodElement){
-		Sheet Runmgr = ExcelReader.readInstance();
-		String project = Runmgr.getRow(1).getCell(1).toString();
-		if(project.equals("QA")) {
-			return testElement;
-		}
-		return prodElement;
-	}
 	
 	
 	  public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
@@ -163,11 +147,5 @@ public class GenericElements extends ObjectRepo {
 		
 		}
 	  
-	  public static String getEnvironment(){
-			Sheet Runmgr = ExcelReader.readInstance();
-			String project = Runmgr.getRow(1).getCell(1).toString();
-			return project;
-			
-		}
 	
 }

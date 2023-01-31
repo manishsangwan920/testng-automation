@@ -8,6 +8,7 @@ import java.sql.Driver;
 
 import org.apache.commons.mail.EmailException;
 import org.testng.ITestContext;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
@@ -43,7 +44,7 @@ public class BaseTest {
 		test.log(LogStatus.INFO, "Exxon Application Launch successfully");
 	}
 	
-	@AfterTest
+	@AfterMethod
 	public void afterTest() {
 		System.out.println("finished Test");
 		ObjectRepo.driver.quit();
