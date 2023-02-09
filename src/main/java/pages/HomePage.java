@@ -36,6 +36,10 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement taskStatus;
 	
+	@FindBy(id = "nodata")
+	@CacheLookup
+	public  WebElement NoDatataskStatus;
+	
 	@FindBy(id = "myChartDistributor")
 	@CacheLookup
 	public  WebElement distributersInfo;
@@ -44,7 +48,7 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement titleAccountTaskRecords;
 	
-	@FindBy(id = "myChartAccount")
+	@FindBy(xpath = "/html/body/div[1]/div[2]/div/div/div/div[5]/div")
 	@CacheLookup
 	public  WebElement accountTaskRecords;
 	
@@ -56,45 +60,13 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement titleServiceEngineerRecords;
 	
-	@FindBy(id = "myChartService")
+	@FindBy(id = "detailReport")
 	@CacheLookup
 	public  WebElement serviceEngineerRecords;
 	
 	@FindBy(xpath = "//a[@role='button' and @data-widget='pushmenu']")
 	@CacheLookup
 	public  WebElement pushMenuButton;
-	
-	@FindBy(id = "dashboard")
-	@CacheLookup
-	public  WebElement dashboardSideBar;
-	
-	@FindBy(id = "userTaskList")
-	@CacheLookup
-	public  WebElement Tasks;
-	
-	@FindBy(id = "qutaskickTaskList")
-	@CacheLookup
-	public  WebElement quickTasks;
-	
-	@FindBy(id = "accounts")
-	@CacheLookup
-	public  WebElement accounts;
-	
-	@FindBy(id = "service_engineers_watcher")
-	@CacheLookup
-	public  WebElement serviceEngineersWatcher;
-
-	@FindBy(id = "machines")
-	@CacheLookup
-	public  WebElement machines;
-	
-	@FindBy(id = "calendar")
-	@CacheLookup
-	public  WebElement calendar;
-	
-	@FindBy(id = "settings")
-	@CacheLookup
-	public  WebElement logOutButtonSideBar;
 	
 	@FindBy(xpath = "//a[@data-toggle='dropdown']")
 	@CacheLookup
@@ -108,7 +80,7 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement resetPassword ;
 	
-	@FindBy(xpath = "//a[contains(text(),'Logout ')]")
+	@FindBy(xpath = "//a[contains(text(),'Logout')]")
 	@CacheLookup
 	public  WebElement logoutButton;
 	
@@ -139,4 +111,26 @@ public class HomePage extends PageBase {
 	@FindBy(id = "message")
 	@CacheLookup
 	public  WebElement errorMsgPasswordMismatch;
+	
+	@FindBy(xpath = "//select[@id='Precisionselect']")
+	@CacheLookup
+	public  WebElement SelectAccount;
+	
+	@FindBy(xpath = "//*[@id=\"Precisionselect\"]/option[2]")
+	@CacheLookup
+	public  WebElement SelectAccountname1;
+	
+	@FindBy(id = "allmachine")
+	@CacheLookup
+	public  WebElement Selectmachine;
+	
+	@FindBy(id = "downloadCSV")
+	@CacheLookup
+	public  WebElement ExportCSV;
+	
+	@FindBy(id = "downloadPdf")
+	@CacheLookup
+	public  WebElement ExportChart;
+	
+	
 	}

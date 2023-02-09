@@ -24,7 +24,7 @@ import stepdefination.Stepdefination;
 
 /*******************************************************************************************************
 * @author  Vikas Sangwan
-* @since   2020-04-15
+*
 ********************************************************************************************************/
 
 
@@ -138,9 +138,74 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test(enabled=true)
-	public static void Test_If_User_Is_Able_To_Logout_Of_Application_On_clicking_Logout_Button() {
+	public static void Test_If_User_Is_Able_To_Logout_Of_Application_On_clicking_Logout_Button_Under_Profile_Icon() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.LogoutProfileIcon();
+	}
+	
+	@Test(enabled=true)
+	public static void Test_If_User_Is_Able_To_Logout_Of_Application_On_clicking_Logout_Button_On_SideBar() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.LogoutProfileIcon();
+	}
+		
+	@Test(enabled=true)
+	public static void Test_Task_Status_Is_Displayed_On_Dashbaoard() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.TaskStatus();
+	}
+	
+	@Test(enabled=true)
+	public static void Test_Distributor_Info_Is_Displayed_On_Dashboard() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.DistributersInfo();
+	}
+	
+	@Test(enabled=true)
+	public static void 	Test_Account_Task_Record_Are_Displayed_On_Dashboard() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+	    Stepdefination.AccountStatusRecord();
+	}
+	
+	@Test(enabled=true)
+	public static void 	Test_Solcare_observation_Records_Are_Displayed_On_Dashboard() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.SolcareObservationRecords();
+	}
+	
+	@Test(enabled=true)
+	public static void 	Test_Solcare_observation_Records_Are_Displayed_And_User_Is_Able_To_Export_CSV() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.downloadcsv();
+	}
+	
+	
+	@Test(enabled=true)
+	public static void 	Test_Solcare_observation_Records_Are_Displayed_And_Exported_Chart_Is_Same_As_Displayed_On_Dashboard(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+	}
+	
+	@Test(enabled=true)
+	public static void 	Service_Engineer_records_Are_Displayed_On_Dashboard() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.serviceEngineerRecords();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_Create_Task_Popup_Is_Dispalyed_And_It_Has_All_The_Fields() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.createTaskPopUp();
+	}
+	@Test (enabled=true)
+	public static void Test_User_is_Able_To_Create_New_Task() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTask("test task","this is my test task","20032023");
+	}
+	
+	@Test(enabled=true)
+	public static void TC36_Verify_that_if_there_are_no_service_engineer_Accounts_and_machines_are_not_added_an_error_message_is_dispayed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTaskWithThreeMissingFields("test task","this is my test task","20032023");
 	}
 	
 }

@@ -7,7 +7,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.awt.AWTException;
@@ -18,17 +20,30 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static settings.ObjectRepo.driver;
 import elementhelper.ButtonHelper;
+import elementhelper.DropDownHelper;
 import elementhelper.TextBoxHelper;
 import generic.GenericHelper;
 import pages.HomePage;
+import pages.HomePageSideBar;
 import pages.LoginPage;
 import pages.ProfilePage;
+import pages.TaskPage;
+import reporting.ExtentReportHelper;
 import settings.ObjectRepo;
 import elementhelper.GenericElements;
 
@@ -381,6 +396,7 @@ public class Stepdefination {
 		try {
 			HomePage hp = new HomePage(driver);
 			ProfilePage pp =new ProfilePage(driver);
+			HomePageSideBar sb = new HomePageSideBar(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");
 			ButtonHelper.click(hp.profile,"Profile");
 			ButtonHelper.click(pp.Edit," Edit Button");
@@ -406,7 +422,7 @@ public class Stepdefination {
 		    ButtonHelper.click(pp.editProfileSave, "Save Button");
 		    Thread.sleep(3000);
 		    driver.switchTo().alert().accept();	
-		    ButtonHelper.click(hp.dashboardSideBar,"Dashbaord on Sidebar tab");
+		    ButtonHelper.click(sb.dashboardSideBar,"Dashbaord on Sidebar tab");
 		    if(hp.companyName.getText().equals(companyname))
 				test.log(LogStatus.PASS, "Edited Company name is displayed on Header of HomePage");
 		        else
@@ -431,7 +447,7 @@ public class Stepdefination {
 		   pp.editProfileSave.click();
 		   Thread.sleep(2000);
 		   driver.switchTo().alert().accept();
-		   ButtonHelper.click(hp.dashboardSideBar,"Dashbaord on Sidebar tab");
+		   ButtonHelper.click(sb.dashboardSideBar,"Dashbaord on Sidebar tab");
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
@@ -499,7 +515,7 @@ public class Stepdefination {
 			HomePage hp = new HomePage(driver);
 			LoginPage lp =new LoginPage(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
-			ButtonHelper.click(hp.logoutButton," Logout Button");
+			ButtonHelper.click(hp.logoutButton," Logout Button under Profile icon");
 			if(lp.loginForm.isDisplayed())
 				test.log(LogStatus.PASS, "User logged out of application successfully");
         		else
@@ -509,5 +525,298 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		} 		
 	}
+	
+	public static void LogoutSideBar() {
+		try {
+			LoginPage lp =new LoginPage(driver);
+			HomePageSideBar sb = new HomePageSideBar(driver);
+			ButtonHelper.click(sb.logOutButtonSideBar," Logout Button on Side Bar");
+			if(lp.loginForm.isDisplayed())
+				test.log(LogStatus.PASS, "User logged out of application successfully");
+        		else
+        			test.log(LogStatus.FAIL, "user was not able to logout of application");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		} 		
+	}
+    
+	public static void TaskStatus() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(3000);
+			String dataCheck=hp.taskStatus.getText();
+			System.out.println(dataCheck);
+			File srcFile=hp.taskStatus.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/TaskStatus.png"));
+			if(hp.NoDatataskStatus.isDisplayed()) {
+				test.log(LogStatus.FAIL, "Task Status Is Not Displayed");
+			    test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/TaskStatus.png"));
+			}else {
+			test.log(LogStatus.PASS, "Task Status Is Displayed");	
+			test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/TaskStatus.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void DistributersInfo() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(3000);
+			File srcFile=hp.distributersInfo.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/DistributersInfo.png"));
+			if(hp.distributersInfo.isDisplayed()) {
+				test.log(LogStatus.PASS, "Distributers info Is Displayed");
+			    test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/DistributersInfo.png"));
+			}else {
+			test.log(LogStatus.FAIL, "Distributers Info Is Not Displayed");	
+			test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/DistributersInfo.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void AccountStatusRecord() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(3000);
+			String dataCheck=hp.taskStatus.getText();
+			System.out.println(dataCheck);
+			File srcFile=hp.accountTaskRecords.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/AccountStatusRecord.png"));
+			if(hp.accountTaskRecords.isDisplayed()) {
+				test.log(LogStatus.PASS, "Account Task Records are Displayed");
+			    test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/AccountStatusRecord.png"));
+			}else {
+			test.log(LogStatus.FAIL, "Account Task Records are Not Displayed");	
+			test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/AccountStatusRecord.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void	SolcareObservationRecords() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(4000);
+			Select drpaccount = new Select(hp.SelectAccount);
+			drpaccount.selectByValue("358");
+			Thread.sleep(3000);
+			File srcFile=hp.solcareObservationRecords.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/SolcareObservationRecords.png"));
+			if(hp.solcareObservationRecords.isDisplayed()) {
+				test.log(LogStatus.PASS, "Solcare Observation Records are Displayed");
+			    test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/SolcareObservationRecords.png"));
+			}else {
+			test.log(LogStatus.FAIL, "Solcare Observation Records are Not Displayed");	
+			test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/SolcareObservationRecords.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void	downloadcsv() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(4000);
+			Select drpaccount = new Select(hp.SelectAccount);
+			drpaccount.selectByValue("358");
+			Thread.sleep(3000);
+			
+			
+			String downloadFilepath =System.getProperty("user.dir");
+			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+			chromePrefs.put("profile.default_content_settings.popups", 0);
+			chromePrefs.put("download.default_directory", downloadFilepath);
+			ChromeOptions options = new ChromeOptions();
+			options.setExperimentalOption("prefs", chromePrefs);
+			WebDriver driver = new ChromeDriver(options);
+			
+			ButtonHelper.click(hp.ExportCSV, "export csv");
+			
+			Thread.sleep(30000);
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void serviceEngineerRecords() {
+		try {  
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(6000);
+			File srcFile=hp.serviceEngineerRecords.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/serviceEngineerRecords.png"));
+			if(hp.serviceEngineerRecords.isDisplayed()) {
+				test.log(LogStatus.PASS, "service Engineer Records are Displayed");
+			    test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/serviceEngineerRecords.png"));
+			}else {
+			test.log(LogStatus.FAIL, "service Engineer Records are Not Displayed");	
+			test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/serviceEngineerRecords.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void createTaskPopUp() {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			File srcFile=((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir")+"/reports/createTaskPopUp.png"));
+		    if(tp.SaveCreatedTask.isDisplayed()&&tp.CloseCreateTaskPopUp.isDisplayed()&&tp.SaveCreatedTask.isDisplayed()&&tp.DueDate.isDisplayed()&&tp.SelectedAccount.isDisplayed()&&tp.ScheduleNoneBtn.isDisplayed()) {
+		    	if(tp.TaskDescription.isDisplayed()&&tp.Disabledmachine.isDisplayed()&&tp.DisabledWatchers.isDisplayed()&&tp.ScheduleMonthlyBtn.isDisplayed()&&tp.ScheduleDailyBtn.isDisplayed()&&tp.ScheduleWeeklyBtn.isDisplayed()) {		      
+		    	 test.log(LogStatus.PASS, " Create Task Pop Up is Displayed after clicking on create task button");
+		    	 test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/createTaskPopUp.png"));
+		    	}
+			}else {
+				test.log(LogStatus.FAIL, "create task popup is Not Displayed or some field on the popup is not present");	
+				test.log(LogStatus.INFO, test.addScreenCapture(System.getProperty("user.dir")+"/reports/createTaskPopUp.png"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void CreateTask(String Taskname, String Description,String dueDate) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomByIndex(tp.ServiceEngineer,"service engineer");
+			DropDownHelper.selectRandomByIndex(tp.SelectedAccount,"Select account");
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			tp=new TaskPage(driver);
+			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+			DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+			Thread.sleep(2000);
+			try {
+				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+				driver.switchTo().alert().accept();
+				tp=new TaskPage(driver);
+				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+				DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+				}
+			}catch(NoAlertPresentException e) {				
+			}
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomByIndex(tp.TaskType,"Task Type");
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 30);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
+				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+			else
+				test.log(LogStatus.PASS, "User was not able to create new task");	
+			tp.DeleteTask.click();			
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+		                         
+	                                                                                                             
+	public static void CreateTaskWithMissingFields(String Taskname, String Description,String dueDate,String fieldname){
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomByIndex(tp.ServiceEngineer,"service engineer");
+			DropDownHelper.selectRandomByIndex(tp.SelectedAccount,"Select account");
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			tp=new TaskPage(driver);
+			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+			DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+			Thread.sleep(2000);
+			try {
+				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+				driver.switchTo().alert().accept();
+				tp=new TaskPage(driver);
+				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+				DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+				}
+			}catch(NoAlertPresentException e) {				
+			}
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomByIndex(tp.TaskType,"Task Type");
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 30);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
+				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+			else
+				test.log(LogStatus.PASS, "User was not able to create new task");	
+			tp.DeleteTask.click();			
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+
+	
+	public static void CreateTaskWithThreeMissingFields(String Taskname, String Description,String dueDate){
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);
+			Thread.sleep(2000);			
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomByIndex(tp.TaskType,"TaskType");				
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			Thread.sleep(4000);
+			if(driver.switchTo().alert().getText().equalsIgnoreCase("This service engineer does not exist."))
+				test.log(LogStatus.PASS, "Error message was dispalyed when no service engineer,Accounts and machines are not added ");	
+			else
+				test.log(LogStatus.PASS, " No Error message was dispalyed when service engineer, Accounts and machines are not added ");
+			driver.switchTo().alert().accept();
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
 
 }
