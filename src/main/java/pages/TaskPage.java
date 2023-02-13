@@ -106,6 +106,18 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public List<WebElement> WatcherList;
 	
+	@FindBy(xpath = "//*[@id='MachineFunc']/div/ul/li")
+	@CacheLookup
+	public List<WebElement> MachineList;
+	
+	@FindBy(xpath = "//*[@id='MachineFunc']/div/ul/li[@class='active']")
+	@CacheLookup
+	public WebElement MachineListActiveFields;
+	
+	@FindBy(xpath = "//*[@id='MachineFunc']/div/button")
+	@CacheLookup
+	public WebElement MachinesFeildTitle;
+	
 	
 	//create task pop up ends
 	

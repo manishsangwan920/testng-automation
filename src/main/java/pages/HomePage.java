@@ -88,6 +88,11 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement companyName ;
 	
+	@FindBy(xpath = "//img[@alt='Exxon Logo']")
+	@CacheLookup
+	public  WebElement companynamelogo ;
+	
+	
 	@FindBy(id = "oldpass")
 	@CacheLookup
 	public  WebElement existingPassword;

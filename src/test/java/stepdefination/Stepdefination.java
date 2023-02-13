@@ -250,10 +250,24 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
+	
 	public static void IsCompanyNamePresent(String companyname){
 		try {  
 			HomePage hp = new HomePage(driver);
 			if(hp.companyName.getText().equals(companyname))
+			test.log(LogStatus.PASS, "After login Company name is displayed on Header of HomePage");
+	        else
+			test.log(LogStatus.FAIL, "company name is not present on header of HomePage");			
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	}
+	}
+	
+	public static void IsCompanyNamePresent(){
+		try {  
+			HomePage hp = new HomePage(driver);
+			if(hp.companynamelogo.isDisplayed())
 			test.log(LogStatus.PASS, "After login Company name is displayed on Header of HomePage");
 	        else
 			test.log(LogStatus.FAIL, "company name is not present on header of HomePage");			
@@ -324,6 +338,7 @@ public class Stepdefination {
 			}  
 		
 	}
+	
 	public static void EditProfilePicture() {
 		try {
 			HomePage hp = new HomePage(driver);
@@ -374,6 +389,7 @@ public class Stepdefination {
 			}  
 		
 	}
+	
 	public static void editProfileEmail() {
 		try {
 			HomePage hp = new HomePage(driver);
@@ -474,6 +490,7 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		} 
 	}
+	
 	public static void PasswordNotMatching(String oldpassword,String newpassword,String confpassword) {
 		try {
 			HomePage hp = new HomePage(driver);
@@ -493,6 +510,7 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		} 		
 	}
+	
 	public static void closeResetpasswordpopUP() {
 		try {
 			HomePage hp = new HomePage(driver);
@@ -510,12 +528,16 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		} 		
 	}
+	
 	public static void LogoutProfileIcon() {
 		try {
 			HomePage hp = new HomePage(driver);
 			LoginPage lp =new LoginPage(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
 			ButtonHelper.click(hp.logoutButton," Logout Button under Profile icon");
+			WebDriverWait wait = new WebDriverWait(driver, 30);
+			wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
 			if(lp.loginForm.isDisplayed())
 				test.log(LogStatus.PASS, "User logged out of application successfully");
         		else
@@ -531,6 +553,9 @@ public class Stepdefination {
 			LoginPage lp =new LoginPage(driver);
 			HomePageSideBar sb = new HomePageSideBar(driver);
 			ButtonHelper.click(sb.logOutButtonSideBar," Logout Button on Side Bar");
+			WebDriverWait wait = new WebDriverWait(driver, 30);
+			wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
 			if(lp.loginForm.isDisplayed())
 				test.log(LogStatus.PASS, "User logged out of application successfully");
         		else
@@ -701,24 +726,24 @@ public class Stepdefination {
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
 			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
-			DropDownHelper.selectRandomByIndex(tp.ServiceEngineer,"service engineer");
-			DropDownHelper.selectRandomByIndex(tp.SelectedAccount,"Select account");
+			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
 			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
 			tp=new TaskPage(driver);
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-			DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+			DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
 			Thread.sleep(2000);
 			try {
 				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
 				driver.switchTo().alert().accept();
 				tp=new TaskPage(driver);
 				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-				DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+				DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
 				}
 			}catch(NoAlertPresentException e) {				
 			}
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
-			DropDownHelper.selectRandomByIndex(tp.TaskType,"Task Type");
+			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
@@ -729,7 +754,7 @@ public class Stepdefination {
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
 			else
-				test.log(LogStatus.PASS, "User was not able to create new task");	
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			tp.DeleteTask.click();			
 			driver.switchTo().alert().accept();
 			Thread.sleep(2000);
@@ -740,8 +765,7 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
-		                         
-	                                                                                                             
+		                                                                                                                                      
 	public static void CreateTaskWithMissingFields(String Taskname, String Description,String dueDate,String fieldname){
 		try {  
 			HomePageSideBar hps = new HomePageSideBar(driver);	
@@ -749,48 +773,63 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
-			DropDownHelper.selectRandomByIndex(tp.ServiceEngineer,"service engineer");
-			DropDownHelper.selectRandomByIndex(tp.SelectedAccount,"Select account");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
-			tp=new TaskPage(driver);
-			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-			DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
-			Thread.sleep(2000);
-			try {
-				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
-				driver.switchTo().alert().accept();
+			if(fieldname!="TaskName")
+				TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			if(fieldname!="ServiceEngineer") {
+				DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 				tp=new TaskPage(driver);
 				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-				DropDownHelper.selectRandomFromList(tp.WatcherList,"watcher");
+				DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+				Thread.sleep(2000);
+				try {
+					if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+					driver.switchTo().alert().accept();
+					tp=new TaskPage(driver);
+					Thread.sleep(2000);
+					ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+					DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+					}
+				}catch(NoAlertPresentException e) {				
 				}
-			}catch(NoAlertPresentException e) {				
 			}
+			if(fieldname!="SelectedAccount")
+				DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			if(fieldname!="DueDate")
+				TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);						
+			if(fieldname!="TaskType")
+				DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
+			if(fieldname=="Machines") {
+				ButtonHelper.click(tp.Enabledmachine, "Machines button");			
+				DropDownHelper.selectElementByIndexFromList(tp.MachineList,"Machines",1);
+			}				
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
-			DropDownHelper.selectRandomByIndex(tp.TaskType,"Task Type");
-			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
-			String screenshotPath = ExtentReportHelper.getScreenshot();
-			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 30);
-			  wait.until(ExpectedConditions.alertIsPresent());
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");		
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");					
+			WebDriverWait wait = new WebDriverWait(driver, 30);
+		 	  wait.until(ExpectedConditions.alertIsPresent());
+			  String msg = driver.switchTo().alert().getText();
+			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("This account does not exist."))				
+				test.log(LogStatus.PASS, "error message '"+msg+ "' was displayed when user missed a mandatory field while creating task");
+		    else			
+				test.log(LogStatus.FAIL, "No error message was displayed when user missed a mandatory field while creating task");
 			driver.switchTo().alert().accept();
-			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
-				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+			tp=new TaskPage(driver);
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.FAIL, "User was able to create new task even though a mandatory field was not selected");
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}
 			else
-				test.log(LogStatus.PASS, "User was not able to create new task");	
-			tp.DeleteTask.click();			
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
+				test.log(LogStatus.PASS, "User was not able to create new task Without selecting all the mandatory fields");	
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
-	
-
 	
 	public static void CreateTaskWithThreeMissingFields(String Taskname, String Description,String dueDate){
 		try {  
@@ -803,20 +842,128 @@ public class Stepdefination {
 			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);
 			Thread.sleep(2000);			
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
-			DropDownHelper.selectRandomByIndex(tp.TaskType,"TaskType");				
+			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"TaskType");				
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
 			Thread.sleep(4000);
 			if(driver.switchTo().alert().getText().equalsIgnoreCase("This service engineer does not exist."))
 				test.log(LogStatus.PASS, "Error message was dispalyed when no service engineer,Accounts and machines are not added ");	
 			else
-				test.log(LogStatus.PASS, " No Error message was dispalyed when service engineer, Accounts and machines are not added ");
+				test.log(LogStatus.FAIL, " No Error message was dispalyed when service engineer, Accounts and machines are not added ");
 			driver.switchTo().alert().accept();
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
+	
+	public static void VerifySelectedFeildIsShowing(String FieldName) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			String data=null,data2=null;
+			if(FieldName=="ServiceEngineer") {
+				data=DropDownHelper.selectRandomElementByIndexAndGetText(tp.ServiceEngineer,"service engineer");			
+			    data2=tp.ServiceEngineer.getAttribute("value");
+			}
+			if(FieldName=="SelectedAccount") {
+				data=DropDownHelper.selectRandomElementByIndexAndGetText(tp.SelectedAccount,"Select account");			
+			    data2=tp.SelectedAccount.getAttribute("value");
+			}				
+			System.out.println(data);
+		    System.out.println(tp.ServiceEngineer.getAttribute("value"));
+		    if(data.equalsIgnoreCase(data2))
+		    		test.log(LogStatus.PASS, FieldName+ " was selected and selected "+FieldName+ " is visible");	
+			else
+				test.log(LogStatus.FAIL, " Either "+FieldName+" was not selected or it is not visible after selection  ");		    		
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void VerifyMachinesFeildIsShowing() {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			Thread.sleep(6000);
+			ButtonHelper.click(tp.Enabledmachine, "Machines button");	
+			DropDownHelper.selectElementByIndexFromList(tp.MachineList,"Machines",1);
+			DropDownHelper.selectRandomElementFromList(tp.MachineList,"Machines");			
+		    String data=tp.MachinesFeildTitle.getAttribute("title");
+		    System.out.println(data);
+		    String data2=tp.MachineListActiveFields.getText();
+		    
+		    if(data.contains(data2))
+	    		test.log(LogStatus.PASS,  "Machines were selected and selected machines are visible");	
+		    else
+			test.log(LogStatus.FAIL, " Either machines were not selected or machines are not visible after selection ");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void WatcherDisabled(String Taskname, String Description,String dueDate) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);					
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			if(tp.DisabledWatchers.isEnabled())
+				test.log(LogStatus.FAIL, "Watchers field is enabled Even if service engineer is not select");	
+			else
+				test.log(LogStatus.PASS, "Watchers field is Disabled if service engineer is not select");	
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	public static void MachinesDisabled(String Taskname, String Description,String dueDate) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"Service Engineer");
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);					
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			if(tp.DisabledWatchers.isEnabled())
+				test.log(LogStatus.FAIL, "Machines field is enabled Even if Account is not select");	
+			else
+				test.log(LogStatus.PASS, "Machines field is Disabled if Account is not select");	
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+	
+	
+	
+	
 	
 
 }
