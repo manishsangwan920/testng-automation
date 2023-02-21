@@ -13,26 +13,28 @@ import settings.ObjectRepo;
 
 public class DropDownHelper {
 	
-	public static void selectRandomElementByIndex(WebElement dropdown,String Name) {
+	public static int selectRandomElementByIndex(WebElement dropdown,String Name) {
 		try {
 			Thread.sleep(3000);			
 			Select dropbutton =new Select(dropdown);
 			List<WebElement> dd = dropbutton.getOptions();
 			int index=ThreadLocalRandom.current().nextInt(1,dd.size());
 			System.out.println(index);
-			dropbutton.selectByIndex(index);				
-			ObjectRepo.test.log(LogStatus.INFO, Name+" Is Selected From Drodown List");			
+			dropbutton.selectByIndex(index);			
+			ObjectRepo.test.log(LogStatus.INFO, Name+" Is Selected From Drodown List");	
+			return index;
 		}catch(Exception e) {
 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select Element From DropDown list "+Name);
-			ExtentReportHelper.logFailWithScreenshot(e.getMessage());			
+			ExtentReportHelper.logFailWithScreenshot(e.getMessage());	
+			return 0;
 		}
 	}
 	
-     public static void selectRandomElementFromList(List<WebElement> dropdown, String name) {
+     public static void selectRandomElementFromDivList(List<WebElement> dropdown, String name,int StartIndex) {
     	 try {
 	        List<WebElement> itemsInDropdown = dropdown;
 	    	int size = itemsInDropdown.size();
-	    	int randomNumber = ThreadLocalRandom.current().nextInt(1,size);	
+	    	int randomNumber = ThreadLocalRandom.current().nextInt(StartIndex,size);	
 	    	itemsInDropdown.get(randomNumber).click();
 	    	ObjectRepo.test.log(LogStatus.INFO, name+" Is Selected From Drodown List");
  		}catch(Exception e) {
@@ -65,7 +67,7 @@ public class DropDownHelper {
   		}
      }
      
-     public static void selectElementByIndexFromList(List<WebElement> dropdown, String name,int index) {
+     public static void selectElementByIndexFromDivList(List<WebElement> dropdown, String name,int index) {
     	 try {
 	        List<WebElement> itemsInDropdown = dropdown;
 	    	itemsInDropdown.get(index).click();
@@ -93,8 +95,32 @@ public class DropDownHelper {
  			return null;
  		}
  	}
-    	
      
-     
+     public static String selectElementByIndexAndGetText(WebElement dropdown,String Name,int index){
+  		try {
+  			Thread.sleep(3000);			
+  			Select dropbutton =new Select(dropdown);
+  			dropbutton.selectByIndex(index);	
+  			WebElement option = dropbutton.getFirstSelectedOption();	
+  			ObjectRepo.test.log(LogStatus.INFO, Name+" Is Selected From Drodown List");
+  			return option.getText();
+  		}catch(Exception e) {
+  			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select Element From DropDown list "+Name);
+  			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+  			return null;
+  		}
+  	}
 
+     public static int sizeOfSelect(WebElement dropdown,String Name) {
+ 		try {
+ 			Thread.sleep(3000);			
+ 			Select dropbutton =new Select(dropdown);
+ 			List<WebElement> dd = dropbutton.getOptions();			
+ 			return dd.size();
+ 		}catch(Exception e) {
+ 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to get size of dropdown list "+Name);
+ 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());	
+ 			return 0;
+ 		}
+ 	}
 }

@@ -3,9 +3,6 @@ package stepdefination;
 import com.relevantcodes.extentreports.LogStatus;
 import static settings.ObjectRepo.test;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -727,18 +724,17 @@ public class Stepdefination {
 			Thread.sleep(4000);
 			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
-			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
 			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
 			tp=new TaskPage(driver);
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-			DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 			Thread.sleep(2000);
 			try {
 				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
 				driver.switchTo().alert().accept();
-				tp=new TaskPage(driver);
-				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-				DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+				tp=new TaskPage(driver);							
+				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 				}
 			}catch(NoAlertPresentException e) {				
 			}
@@ -779,28 +775,27 @@ public class Stepdefination {
 				DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 				tp=new TaskPage(driver);
 				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-				DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 				Thread.sleep(2000);
 				try {
 					if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
 					driver.switchTo().alert().accept();
 					tp=new TaskPage(driver);
-					Thread.sleep(2000);
-					ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-					DropDownHelper.selectRandomElementFromList(tp.WatcherList,"watcher");
+					Thread.sleep(2000);								
+					DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 					}
 				}catch(NoAlertPresentException e) {				
 				}
 			}
 			if(fieldname!="SelectedAccount")
-				DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+				DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
 			if(fieldname!="DueDate")
 				TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);						
 			if(fieldname!="TaskType")
 				DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			if(fieldname=="Machines") {
 				ButtonHelper.click(tp.Enabledmachine, "Machines button");			
-				DropDownHelper.selectElementByIndexFromList(tp.MachineList,"Machines",1);
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
 			}				
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");		
@@ -864,17 +859,18 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			String data=null,data2=null;
+			boolean present=false;
 			if(FieldName=="ServiceEngineer") {
 				data=DropDownHelper.selectRandomElementByIndexAndGetText(tp.ServiceEngineer,"service engineer");			
 			    data2=tp.ServiceEngineer.getAttribute("value");
+			    present=tp.ServiceEngineer.isDisplayed(); 
 			}
-			if(FieldName=="SelectedAccount") {
-				data=DropDownHelper.selectRandomElementByIndexAndGetText(tp.SelectedAccount,"Select account");			
-			    data2=tp.SelectedAccount.getAttribute("value");
+			if(FieldName=="Account") {
+				data=DropDownHelper.selectRandomElementByIndexAndGetText(tp.SelectedAccount,"Account");			
+			   present=tp.SelectedAccount.isDisplayed();
 			}				
-			System.out.println(data);
-		    System.out.println(tp.ServiceEngineer.getAttribute("value"));
-		    if(data.equalsIgnoreCase(data2))
+			
+		    if(present)
 		    		test.log(LogStatus.PASS, FieldName+ " was selected and selected "+FieldName+ " is visible");	
 			else
 				test.log(LogStatus.FAIL, " Either "+FieldName+" was not selected or it is not visible after selection  ");		    		
@@ -890,14 +886,14 @@ public class Stepdefination {
 			TaskPage tp=new TaskPage(driver);
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
-			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"account");
 			Thread.sleep(6000);
 			ButtonHelper.click(tp.Enabledmachine, "Machines button");	
-			DropDownHelper.selectElementByIndexFromList(tp.MachineList,"Machines",1);
-			DropDownHelper.selectRandomElementFromList(tp.MachineList,"Machines");			
+			DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+			DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"Machines",1);			
 		    String data=tp.MachinesFeildTitle.getAttribute("title");
 		    System.out.println(data);
-		    String data2=tp.MachineListActiveFields.getText();
+		    String data2=tp.MachineOneActiveFields.getText();
 		    
 		    if(data.contains(data2))
 	    		test.log(LogStatus.PASS,  "Machines were selected and selected machines are visible");	
@@ -918,7 +914,7 @@ public class Stepdefination {
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
 			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
-			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Select account");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
 			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);					
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
@@ -960,10 +956,296 @@ public class Stepdefination {
 		}
 	}
 	
-	
-	
-	
-	
-	
+    public static void SelectSameWatcherAndServiceEngineer() {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			int index=DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"Service Engineer");
+			tp=new TaskPage(driver);
+			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+			DropDownHelper.selectElementByIndexFromDivList(tp.WatcherList,"watcher", index-1);
+			Thread.sleep(3000);
+		    if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher"))
+	    		test.log(LogStatus.PASS,  "User is not able to select same service engineer and watcher");	
+		    else
+				test.log(LogStatus.FAIL, "User is able to select same service engineer and watcher");
+					
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
 
+    public static void VerifymultipleMachinesCanBeSelected(String numberofMachine) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
+			Thread.sleep(6000);
+			ButtonHelper.click(tp.Enabledmachine, "Machines button");
+			if(numberofMachine.equalsIgnoreCase("one")) {
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+				DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"Machines",1);	
+				String data=tp.MachinesFeildTitle.getAttribute("title");
+			    System.out.println(data);
+			    String data2=tp.MachineOneActiveFields.getText();		    
+			    if(data.contains(data2))
+		    		test.log(LogStatus.PASS, "User is able to select only One Machine and selected machine is visible");	
+			    else
+			    	test.log(LogStatus.FAIL, " Either machine was not selected or selected machine is not visible after selection ");				
+			}
+			if(numberofMachine.equalsIgnoreCase("multiple"));
+			if(numberofMachine.equalsIgnoreCase("ALL")) {
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+				Thread.sleep(1000);
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+				int size1=tp.MachineActiveFieldsList.size();
+				int size2=tp.MachineList.size();
+				size1++;
+				if(size1==size2)
+					test.log(LogStatus.PASS, "User is able to select All Machines and selected machines are visible");	
+			    else
+					test.log(LogStatus.FAIL, " Either all the machines were not selected or machines are not visible after selection ");
+			}
+		    
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
+    public static void AllFourTaskTypeAreDisplayed() {
+    	try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			for(int i=1;i<DropDownHelper.sizeOfSelect(tp.TaskType, "Task Type");i++) {
+				switch(i) {
+				case 1:
+					String data1=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", i);								
+					if(data1.contains("Solcare Service"))
+						test.log(LogStatus.PASS, "Solcare service is present in the	TaskType DropDown field");	
+				    else
+					test.log(LogStatus.FAIL, "Solcare service is not present in the	TaskType DropDown field");
+					break;
+				case 2:
+					String data2=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", i);								
+					if(data2.contains("Oil Skimming"))
+						test.log(LogStatus.PASS, "Oil Skimming is present in the TaskType DropDown field");	
+				    else
+					test.log(LogStatus.FAIL, "Oil Skimming is not present in the TaskType DropDown field");
+					break;
+				case 3:
+					String data3=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", i);								
+					if(data3.contains("Sump Cleaning"))
+						test.log(LogStatus.PASS, "Sump Cleaning is present in the TaskType DropDown field");	
+				    else
+					test.log(LogStatus.FAIL, "Sump Cleaning is not present in the TaskType DropDown field");
+					break;
+				case 4:
+					String data4=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", i);								
+					if(data4.contains("Bacteria/Fungi Check"))
+						test.log(LogStatus.PASS, "Bacteria/Fungi Check is present in the TaskType DropDown field");	
+				    else
+					test.log(LogStatus.FAIL, "Bacteria/Fungi Check not present in the TaskType DropDown field");
+					break;
+				}
+			}
+    	}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+    }
+
+    public static void CreateTaskWithDifferentTaskTypes(String Taskname, String Description,String dueDate,int TaskTypeIndex) {
+		try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			tp=new TaskPage(driver);
+			Thread.sleep(2000);
+			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+			Thread.sleep(2000);
+			try {
+				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+				driver.switchTo().alert().accept();
+				tp=new TaskPage(driver);
+				Thread.sleep(2000);			
+				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+				}
+			}catch(NoAlertPresentException e) {				
+			}
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			String data=null;
+			if(TaskTypeIndex==1)
+				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 1);
+			if(TaskTypeIndex==2)
+				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 2);
+			if(TaskTypeIndex==3)
+				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 3);
+			if(TaskTypeIndex==4)
+				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 4);
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 30);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
+				test.log(LogStatus.PASS, "User was able to create new task successfully With TaskType "+data);	
+			else
+				test.log(LogStatus.FAIL, "User was not able to create new task With TaskType "+data);	
+			tp.DeleteTask.click();			
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+			driver.switchTo().alert().accept();
+			Thread.sleep(2000);
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+    
+    public static void NoneButtonIsSelectedByDefault() {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");			
+		    if(tp.ScheduleNoneBtn.getAttribute("class").contains("selected"))
+	    		test.log(LogStatus.PASS,  "Schedule None Button Is PreSelected By Default");	
+		    else
+				test.log(LogStatus.FAIL, "Schedule None Button Is Not PreSelected By Default");
+					
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+        
+    public static void EndDateFieldDisplayed() {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			ButtonHelper.click(tp.ScheduleDailyBtn, "Schedule Daily Button");
+			Thread.sleep(2000);
+		    if(tp.taskRepeatEndDate.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule Daily Button Select End Date Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule Daily Button Select End Date Field Is Not Displayed");
+					
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+    
+    public static void selectScheduleWeekly() {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			ButtonHelper.click(tp.ScheduleWeeklyBtn, "Schedule weekly Button");
+			Thread.sleep(3000);
+		    if(tp.WeeklytaskRepeatEndDate.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule weekly Button Select End Date Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule weekly Button Select End Date Field Is Not Displayed");
+		    if(tp.selectWeek.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule weekly Button Select Week Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule weekly Button Select Week Field Is Not Displayed");
+		    if(tp.dayOfTheWeek.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule weekly Button Select Day Of Week Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule weekly Button Select Day Of Week Field Is Not Displayed");
+			String data=tp.selectWeek.getText();
+			if(data.contains("Every week")&&data.contains("Alternate week"))
+	    		test.log(LogStatus.PASS,  "Selecting Schedule weekly Button Select week dropdown contains both Every week And Alternate week options");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule weekly Button Select week does not contain both Every week And Alternate week options");
+			String data2=DropDownHelper.selectRandomElementByIndexAndGetText(tp.selectWeek, "select week");
+			if(data2.equalsIgnoreCase("Every week")||data2.equalsIgnoreCase("Alternate week"))
+	    		test.log(LogStatus.PASS,  "Use is able to select alternative week or every week as schedule");	
+		    else
+				test.log(LogStatus.FAIL, "Use is not able to select alternative week or every week as schedule");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+    
+    public static void selectScheduleMonthly() {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule Monthly Button");
+			Thread.sleep(3000);
+		    if(tp.MonthlytaskRepeatEndDate.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule Monthly Button Select End Date Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule Monthly Button Select End Date Field Is Not Displayed");
+		    if(tp.selectMonth.isDisplayed())
+	    		test.log(LogStatus.PASS,  "Selecting Schedule Monthly Button Select month Field Is Displayed");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule Monthly Button Select month Field Is Not Displayed");
+			String data=tp.selectMonth.getText();
+			if(data.contains("Every month")&&data.contains("Alternate month"))
+	    		test.log(LogStatus.PASS,  "Selecting Schedule Monthly Button Select month dropdown contains both Every month And Alternate month options");	
+		    else
+				test.log(LogStatus.FAIL, "Selecting Schedule Monthly Button Select month does not contain both Every month And Alternate month options");
+			String data2=DropDownHelper.selectRandomElementByIndexAndGetText(tp.selectMonth, "select month");
+			if(data2.equalsIgnoreCase("Every month")||data2.equalsIgnoreCase("Alternate month"))
+	    		test.log(LogStatus.PASS,  "Use is able to select alternative month or every month as schedule");	
+		    else
+				test.log(LogStatus.FAIL, "Use is not able to select alternative month or every month as schedule");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

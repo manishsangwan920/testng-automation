@@ -253,7 +253,7 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void Verify_That_User_Is_Able_To_Select_Accounts_And_Selected_Account_Is_visible() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.VerifySelectedFeildIsShowing("SelectedAccount");
+		Stepdefination.VerifySelectedFeildIsShowing("Account");
 	}
 	
 	@Test(enabled=true)
@@ -269,9 +269,88 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test(enabled=true)
+	public static void Verify_That_User_Is_Not_Able_Select_The_Same_Service_Engineer_And_Watcher() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.SelectSameWatcherAndServiceEngineer();
+	}
+	
+	
+	@Test(enabled=true)
 	public static void Verify_That_machines_Field_Is_Disabled_Untill_Account_Is_Not_Selected() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.MachinesDisabled("test task","this is my test task","20032023");
+	}
+	
+	@Test(enabled=true)
+	public static void Verify_That_User_Is_Able_To_Select_A_Single_Machine() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.VerifymultipleMachinesCanBeSelected("one");
+	}
+	
+	@Test(enabled=true)
+	public static void Verify_That_User_Is_Able_To_Select_More_Than_One_the_Machine() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.VerifymultipleMachinesCanBeSelected("Multiple");
+	}
+
+	@Test(enabled=true)
+	public static void Verify_That_User_Is_Able_To_Select_All_the_Machines() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.VerifymultipleMachinesCanBeSelected("All");
+	}
+	
+	@Test(enabled=true)
+	public static void Verify_That_User_Is_Able_To_See_And_Select_All_Four_TaskTypes(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.AllFourTaskTypeAreDisplayed();
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Solcare_Service_As_TaskType() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",1);
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Oil_Skimming_As_TaskType() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",2);
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Sump_Cleaning_As_TaskType() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",3);
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Bacteria_Fungi_Check_As_TaskType() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",4);
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_If_None_Button_Is_PreSelected_By_Default() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.NoneButtonIsSelectedByDefault();
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_selecting_Schedule_Daily_Button_Select_End_Date_Field_Should_Be_Displayed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.EndDateFieldDisplayed();
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_selecting_Schedule_weekly_Button_Select_End_Date_Field_And_Select_Week_and_WeekDays_Should_Be_Displayed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.selectScheduleWeekly();;
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_selecting_Schedule_weekly_Button_Select_End_Date_Field_And_Select_month_DropDown_Should_Be_Displayed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.selectScheduleMonthly();
 	}
 	
 	

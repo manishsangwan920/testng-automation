@@ -82,9 +82,22 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement taskRepeatEndDate;
 	
+	@FindBy(id = "taskRepeatEndDate2")
+	@CacheLookup
+	public  WebElement MonthlytaskRepeatEndDate;
+	
+	@FindBy(id = "taskRepeatEndDate1")
+	@CacheLookup
+	public  WebElement WeeklytaskRepeatEndDate;
+	
 	@FindBy(id = "selectWeek")
 	@CacheLookup
 	public  WebElement selectWeek;
+	
+	
+	@FindBy(id = "selectMonth")
+	@CacheLookup
+	public  WebElement selectMonth;
 	
 	@FindBy(xpath = "//button[@onclick='resetMyModalPopUp()']")
 	@CacheLookup
@@ -102,6 +115,11 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement Enabledmachine;
 	
+	
+	@FindBy(xpath = "//*[@id=\"weeklyBlock\"]/div[1]")
+	@CacheLookup
+	public  WebElement dayOfTheWeek;
+	
 	@FindBy(xpath = "//*[@id='WatchersFunc']/div/ul/li")
 	@CacheLookup
 	public List<WebElement> WatcherList;
@@ -112,7 +130,11 @@ public class TaskPage extends PageBase {
 	
 	@FindBy(xpath = "//*[@id='MachineFunc']/div/ul/li[@class='active']")
 	@CacheLookup
-	public WebElement MachineListActiveFields;
+	public WebElement MachineOneActiveFields;
+	
+	@FindBy(xpath = "//*[@id='MachineFunc']/div/ul/li[@class='active']")
+	@CacheLookup
+	public List<WebElement> MachineActiveFieldsList;
 	
 	@FindBy(xpath = "//*[@id='MachineFunc']/div/button")
 	@CacheLookup

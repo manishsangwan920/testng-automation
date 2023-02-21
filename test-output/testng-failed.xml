@@ -5,15 +5,11 @@
     <classes>
       <class name="TestCases.TestCases">
         <methods>
-          <include name="Upload_Profile_Picture_And_Save_It"/>
           <include name="setUp"/>
           <include name="beforeTest"/>
           <include name="afterTest"/>
-          <include name="User_Is_Able_To_See_Dashboard"/>
           <include name="endReport"/>
           <include name="Verify_That_User_Is_Able_To_Select_Service_Engineer_And_Selected_Service_Engineer_Is_visible"/>
-          <include name="Welcome_Distributers_Name_IS_Displayed"/>
-          <include name="User_Is_Able_To_See_And_Accept_cookies"/>
         </methods>
       </class> <!-- TestCases.TestCases -->
     </classes>
