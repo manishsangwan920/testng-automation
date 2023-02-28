@@ -3,6 +3,7 @@ package elementhelper;
 
 import static settings.ObjectRepo.driver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,21 +51,7 @@ public class GenericElements extends ObjectRepo {
 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
 		}
 	}
-	
-	
-	public static boolean IsElementPresent(WebElement el){
-		boolean value = false;
-		try {
-			if(el.isDisplayed()) 
-				value = true;
-		}catch(Exception e) {
-			value = false;
-		}
-		return value;
-		
-	}
-	
-	
+
 	
 	public static void ValidateTheNullValueOfTheElementsIsTheDisplay(WebElement el, String Name) {
 		try {
@@ -88,64 +75,26 @@ public class GenericElements extends ObjectRepo {
 		}
 	}
 	
-	public static void VerifyDataFromExcel(WebElement el, String Name) {
-		String str = el.getText();
-		String webele = str.replaceAll("0 Connected | 0 Loading","");
-		String webElement = webele.replaceAll("\n","");
-		if(webElement.contains(Name)) {
-			ObjectRepo.test.log(LogStatus.PASS,Name +" Is Displayed");
-		}else {
-			ObjectRepo.test.log(LogStatus.FAIL,Name +" Is Not Displayed");
-		}
-	}
+	  
+	  public static boolean isFileDownloaded(String downloadPath, String fileName) {
+		  File dir = new File(downloadPath);
+		  File[] dirContents = dir.listFiles();
 
-	public static void ValidateRelevantElementIsDisplayed(List<WebElement> List_el,String Name,String message){
-		for (WebElement el :List_el) {
-			String ele = el.getText();
-		    if(ele.equals(Name)) {
-		    	ObjectRepo.test.log(LogStatus.PASS,message+" Related Answer is display");
-		    	break;
-		    }
-		}
-	}
-	
-	
-	
-	
-	
-	  public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
-	    {
-	        // Create a new ArrayList
-	        ArrayList<T> newList = new ArrayList<T>();
-	        // Traverse through the first list
-	        for (T element : list) {
-	            // If this element is not present in newList
-	            // then add it
-	            if (!newList.contains(element)) {
-	                newList.add(element);
-	            }
-	        }
+		  for (int i = 0; i < dirContents.length; i++) {
+		      if (dirContents[i].getName().equals(fileName)) {
+		          // File has been found, it can now be deleted:
+		          dirContents[i].delete();
+		          return true;
+		      }
+		          }
+		      return false;
+	  }
 	  
-	        // return the new list
-	        return newList;
-	    }
-
+	  public static int NumberOfFilesInPresentInFolder(String folderPath) {
+		  File dir = new File(folderPath);
+		  File[] dirContents = dir.listFiles();
+		  return dirContents.length;
+		      
+	  }
 	  
-	
-	  
-	  
-	  public static boolean isDownVotedQuestionAssigned(String question){
-			WebElement ele = driver.findElement(By.xpath("(//*[text()='"+question+"']//parent::*)[1]"));
-			String text =ele.getAttribute("class");
-			boolean assigne = text.contains("QuestionSuggestionItem_disabled__1YMjh");
-			if(assigne==false) {
-	 			return false;
-			}else {
-				System.out.println("Download Question Already Assigned!");
-				return true;
-			}
-		
-		}
-	  
-	
 }

@@ -1,4 +1,3 @@
-
 package browserconfig;
 
 import java.net.MalformedURLException;

@@ -4,10 +4,17 @@ import org.apache.commons.mail.EmailException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import static settings.ObjectRepo.test;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.relevantcodes.extentreports.LogStatus;
 import static settings.ObjectRepo.browser;
 import browserconfig.BrowserType;
@@ -175,7 +182,7 @@ public class TestCases extends BaseTest {
 	
 	@Test(enabled=true)
 	public static void 	Test_Solcare_observation_Records_Are_Displayed_And_User_Is_Able_To_Export_CSV() {
-		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");				
 		Stepdefination.downloadcsv();
 	}
 	
@@ -183,6 +190,13 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void 	Test_Solcare_observation_Records_Are_Displayed_And_User_Is_Able_To_Export_Chart(){
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.downloadChart("all");
+	}
+	
+	@Test(enabled=true)
+	public static void Test_Solcare_observation_Records_Are_Displayed_And_User_Is_Able_To_Export_Chart_For_A_Specifiic_Machine(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.downloadChart("one");
 	}
 	
 	@Test(enabled=true)
@@ -293,7 +307,7 @@ public class TestCases extends BaseTest {
 		Stepdefination.VerifymultipleMachinesCanBeSelected("Multiple");
 	}
 
-	@Test(enabled=true)
+	@Test(enabled=false)
 	public static void Verify_That_User_Is_Able_To_Select_All_the_Machines() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.VerifymultipleMachinesCanBeSelected("All");

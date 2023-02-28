@@ -3,7 +3,7 @@ package stepdefination;
 import com.relevantcodes.extentreports.LogStatus;
 import static settings.ObjectRepo.test;
 
-import java.net.URL;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +13,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.net.URL;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
@@ -26,6 +27,8 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -313,7 +316,8 @@ public class Stepdefination {
 			ButtonHelper.click(pp.uploadPicture, "Upload Picture Button");			
 			Robot robo = new Robot();
 			robo.delay(2000);
-			StringSelection addressString = new StringSelection("file:///D:/newautomations/testng-automation/src/test/resources/TestData/profilepicture.jpg");
+			System.getProperty("user.dir");
+			StringSelection addressString = new StringSelection(System.getProperty("user.dir")+"\\src\\test\\resources\\TestData\\profilepicture.jpg");
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(addressString,null);
 			robo.keyPress(KeyEvent.VK_CONTROL);
 			robo.keyPress(KeyEvent.VK_V);
@@ -341,11 +345,11 @@ public class Stepdefination {
 			HomePage hp = new HomePage(driver);
 			ProfilePage pp =new ProfilePage(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");
-			ButtonHelper.click(hp.profile,"Profile"); 
+			ButtonHelper.click(hp.profile,"Profile from dropdown is"); 
 			ButtonHelper.click(pp.uploadPicture, "Upload Picture Button");			
 			Robot robo = new Robot();
 			robo.delay(2000);
-			StringSelection addressString = new StringSelection("file:///D:/newautomations/testng-automation/src/test/resources/TestData/profilepicture.jpg");
+			StringSelection addressString = new StringSelection(System.getProperty("user.dir")+"\\src\\test\\resources\\TestData\\profilepicture.jpg");
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(addressString,null);
 			robo.keyPress(KeyEvent.VK_CONTROL);
 			robo.keyPress(KeyEvent.VK_V);
@@ -364,7 +368,7 @@ public class Stepdefination {
 			pp = new ProfilePage(driver);
 			ButtonHelper.click(pp.uploadPicture, "Upload Picture");
 			robo.delay(2000);
-			StringSelection addressString2 = new StringSelection("file:///D:/newautomations/testng-automation/src/test/resources/TestData/profilepicture2.jpeg");
+			StringSelection addressString2 = new StringSelection(System.getProperty("user.dir")+"\\src\\test\\resources\\TestData\\profilepicture2.jpeg");
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(addressString2,null);
 			robo.keyPress(KeyEvent.VK_CONTROL);
 			robo.keyPress(KeyEvent.VK_V);
@@ -647,30 +651,90 @@ public class Stepdefination {
 	}
 	
 	public static void	downloadcsv() {
-		try {  
+		try { 			
 			HomePage hp = new HomePage(driver);	
 			Thread.sleep(4000);
-			Select drpaccount = new Select(hp.SelectAccount);
-			drpaccount.selectByValue("358");
-			Thread.sleep(3000);
-			
-			
-			String downloadFilepath =System.getProperty("user.dir");
-			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-			chromePrefs.put("profile.default_content_settings.popups", 0);
-			chromePrefs.put("download.default_directory", downloadFilepath);
-			ChromeOptions options = new ChromeOptions();
-			options.setExperimentalOption("prefs", chromePrefs);
-			WebDriver driver = new ChromeDriver(options);
-			
-			ButtonHelper.click(hp.ExportCSV, "export csv");
-			
+			DropDownHelper.selectRandomElementByIndex(hp.SelectAccount, "Account");
+			Thread.sleep(3000);				
+			ButtonHelper.click(hp.ExportCSV, "export csv");			
 			Thread.sleep(30000);
+			int num=GenericElements.NumberOfFilesInPresentInFolder(System.getProperty("user.home")+"\\Downloads");
+			boolean check=false;
+			for(int i=1;i<=num;i++)
+			{
+				if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","export.csv")) {
+					check=true;
+					break;
+				}else{
+					check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","export("+i+").csv");
+					if(check)
+						break;
+				}
+			}
+			if(check) {				
+				test.log(LogStatus.PASS, "Use Is Able To Download CSV File After Clicking Export CSV");	
+			}else {
+				test.log(LogStatus.FAIL, "Use Is Not Able To Download CSV File After Clicking Export CSV");
+				test.log(LogStatus.INFO, "Name And extension of the downloded file should be same as present in test data");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
+	
+	public static void	downloadChart(String OneOrAll) {
+		try { 			
+			HomePage hp = new HomePage(driver);	
+			Thread.sleep(4000);
+			DropDownHelper.selectRandomElementByIndex(hp.SelectAccount, "Account");
+			Thread.sleep(3000);				
+						
+			Thread.sleep(30000);
+			int num=GenericElements.NumberOfFilesInPresentInFolder(System.getProperty("user.home")+"\\Downloads")+1;
+			boolean check=false;
+			if(OneOrAll=="all")
+			{  
+				ButtonHelper.click(hp.ExportChart, "export csv");
+				for(int i=1;i<=num;i++)
+				{
+					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-observation.pdf")) {
+						check=true;
+						break;
+					}else{
+						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-observation("+i+").pdf");
+						if(check)
+							break;
+					}
+				}
+			}
+			if(OneOrAll=="one")
+			{
+				hp = new HomePage(driver);
+				DropDownHelper.selectElementByIndex(hp.Selectmachine, "machine",2);
+				ButtonHelper.click(hp.ExportChart, "export csv");
+				for(int i=1;i<=num;i++)
+				{
+					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-details.pdf")) {
+						check=true;
+						break;
+					}else{
+						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-details("+i+").pdf");
+						if(check)
+							break;
+					}
+				}
+			}
+			if(check)
+				test.log(LogStatus.PASS, "Use Is Able To Download Chart After Clicking Export Chart");
+			else
+				test.log(LogStatus.FAIL, "Use Is Not Able To Download Chart After Clicking Export Chart");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+	
 	
 	public static void serviceEngineerRecords() {
 		try {  

@@ -117,13 +117,10 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement errorMsgPasswordMismatch;
 	
-	@FindBy(xpath = "//select[@id='Precisionselect']")
+	@FindBy(id = "Precisionselect")
 	@CacheLookup
 	public  WebElement SelectAccount;
 	
-	@FindBy(xpath = "//*[@id=\"Precisionselect\"]/option[2]")
-	@CacheLookup
-	public  WebElement SelectAccountname1;
 	
 	@FindBy(id = "allmachine")
 	@CacheLookup
