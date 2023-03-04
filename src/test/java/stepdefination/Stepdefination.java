@@ -1,6 +1,9 @@
 package stepdefination;
 
 import com.relevantcodes.extentreports.LogStatus;
+
+import configreader.ExcelReader;
+
 import static settings.ObjectRepo.test;
 
 
@@ -458,9 +461,9 @@ public class Stepdefination {
 		   pp.editProfileName.clear();
 		   pp.editProfilePhone.clear();
 		   pp.editProfileCompany.clear();
-		   pp.editProfileName.sendKeys("Parikshit");
-		   pp.editProfileCompany.sendKeys("Yugasa Software Labs");
-		   pp.editProfilePhone.sendKeys("9711474332");
+		   pp.editProfileName.sendKeys(ExcelReader.ReadTestData("original_edit_profile_user_name"));
+		   pp.editProfileCompany.sendKeys(ExcelReader.ReadTestData("original_edit_profile_company_name"));
+		   pp.editProfilePhone.sendKeys(ExcelReader.ReadTestData("original_edit_profile_user_contact_num "));
 		   pp.editProfileSave.click();
 		   Thread.sleep(2000);
 		   driver.switchTo().alert().accept();
@@ -536,7 +539,7 @@ public class Stepdefination {
 			LoginPage lp =new LoginPage(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
 			ButtonHelper.click(hp.logoutButton," Logout Button under Profile icon");
-			WebDriverWait wait = new WebDriverWait(driver, 30);
+			WebDriverWait wait = new WebDriverWait(driver, 50);
 			wait.until(ExpectedConditions.alertIsPresent());
 			driver.switchTo().alert().accept();
 			if(lp.loginForm.isDisplayed())
@@ -554,7 +557,7 @@ public class Stepdefination {
 			LoginPage lp =new LoginPage(driver);
 			HomePageSideBar sb = new HomePageSideBar(driver);
 			ButtonHelper.click(sb.logOutButtonSideBar," Logout Button on Side Bar");
-			WebDriverWait wait = new WebDriverWait(driver, 30);
+			WebDriverWait wait = new WebDriverWait(driver, 50);
 			wait.until(ExpectedConditions.alertIsPresent());
 			driver.switchTo().alert().accept();
 			if(lp.loginForm.isDisplayed())
@@ -662,11 +665,11 @@ public class Stepdefination {
 			boolean check=false;
 			for(int i=1;i<=num;i++)
 			{
-				if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","export.csv")) {
+				if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_of_export_csv_file")+".csv")) {
 					check=true;
 					break;
 				}else{
-					check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","export("+i+").csv");
+					check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_of_export_csv_file")+"("+i+").csv");
 					if(check)
 						break;
 				}
@@ -688,21 +691,21 @@ public class Stepdefination {
 			HomePage hp = new HomePage(driver);	
 			Thread.sleep(4000);
 			DropDownHelper.selectRandomElementByIndex(hp.SelectAccount, "Account");
-			Thread.sleep(3000);				
-						
-			Thread.sleep(30000);
+			Thread.sleep(3000);										
+			
 			int num=GenericElements.NumberOfFilesInPresentInFolder(System.getProperty("user.home")+"\\Downloads")+1;
 			boolean check=false;
 			if(OneOrAll=="all")
 			{  
-				ButtonHelper.click(hp.ExportChart, "export csv");
+				ButtonHelper.click(hp.ExportChart, "Export CSV");
+				Thread.sleep(30000);
 				for(int i=1;i<=num;i++)
 				{
-					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-observation.pdf")) {
+					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_export_chart_allMachines")+"."+ExcelReader.ReadTestData("extention_export_chart_allMachines"))) {
 						check=true;
 						break;
 					}else{
-						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-observation("+i+").pdf");
+						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_export_chart_allMachines")+"("+i+")."+ExcelReader.ReadTestData("extention_export_chart_allMachines"));
 						if(check)
 							break;
 					}
@@ -710,16 +713,17 @@ public class Stepdefination {
 			}
 			if(OneOrAll=="one")
 			{
-				hp = new HomePage(driver);
-				DropDownHelper.selectElementByIndex(hp.Selectmachine, "machine",2);
+				hp = new HomePage(driver);									
+				DropDownHelper.selectRandomElementByIndexAndGetText(hp.Selectmachine, "Machine");				    				
 				ButtonHelper.click(hp.ExportChart, "export csv");
+				Thread.sleep(30000);
 				for(int i=1;i<=num;i++)
 				{
-					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-details.pdf")) {
+					if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_export_chart_specificMachine")+"."+ExcelReader.ReadTestData("extention_export_chart_specificMachine"))) {
 						check=true;
 						break;
 					}else{
-						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads","solcare-details("+i+").pdf");
+						check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_export_chart_specificMachine")+"("+i+")."+ExcelReader.ReadTestData("extention_export_chart_specificMachine"));
 						if(check)
 							break;
 					}
@@ -808,18 +812,19 @@ public class Stepdefination {
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 30);
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
 			  wait.until(ExpectedConditions.alertIsPresent());
 			driver.switchTo().alert().accept();
-			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
-			else
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
-			tp.DeleteTask.click();			
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
@@ -864,7 +869,7 @@ public class Stepdefination {
 			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");		
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");					
-			WebDriverWait wait = new WebDriverWait(driver, 30);
+			WebDriverWait wait = new WebDriverWait(driver, 50);
 		 	  wait.until(ExpectedConditions.alertIsPresent());
 			  String msg = driver.switchTo().alert().getText();
 			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("This account does not exist."))				
@@ -1041,41 +1046,110 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
-
-    public static void VerifymultipleMachinesCanBeSelected(String numberofMachine) {
-		try {  
+    public static void BasicCreateTaskHalfHelper(String Taskname, String Description,String dueDate) {
+    	try {  
 			HomePageSideBar hps = new HomePageSideBar(driver);	
 			TaskPage tp=new TaskPage(driver);
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(4000);
+			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			Thread.sleep(6000);
-			ButtonHelper.click(tp.Enabledmachine, "Machines button");
-			if(numberofMachine.equalsIgnoreCase("one")) {
-				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
-				DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"Machines",1);	
-				String data=tp.MachinesFeildTitle.getAttribute("title");
-			    System.out.println(data);
-			    String data2=tp.MachineOneActiveFields.getText();		    
-			    if(data.contains(data2))
-		    		test.log(LogStatus.PASS, "User is able to select only One Machine and selected machine is visible");	
-			    else
-			    	test.log(LogStatus.FAIL, " Either machine was not selected or selected machine is not visible after selection ");				
+			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			tp=new TaskPage(driver);
+			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
+			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+			Thread.sleep(2000);
+			try {
+				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+				driver.switchTo().alert().accept();
+				tp=new TaskPage(driver);							
+				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+				}
+			}catch(NoAlertPresentException e) {				
 			}
-			if(numberofMachine.equalsIgnoreCase("multiple"));
-			if(numberofMachine.equalsIgnoreCase("ALL")) {
-				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
-				Thread.sleep(1000);
-				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
-				int size1=tp.MachineActiveFieldsList.size();
-				int size2=tp.MachineList.size();
-				size1++;
-				if(size1==size2)
-					test.log(LogStatus.PASS, "User is able to select All Machines and selected machines are visible");	
-			    else
-					test.log(LogStatus.FAIL, " Either all the machines were not selected or machines are not visible after selection ");
+			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+    	}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+    	
+    }
+    
+    public static void VerifymultipleMachinesCanBeSelected(String Taskname, String Description,String dueDate, String numberofMachine) {
+		try {  						
+			BasicCreateTaskHalfHelper(Taskname,Description,dueDate);
+			TaskPage tp=new TaskPage(driver);
+			Thread.sleep(3000);
+			ButtonHelper.click(tp.Enabledmachine, "Machines button");	
+			if(tp.MachineList.size()<=1){
+				test.log(LogStatus.INFO, "For the selected account no machines are available to Select");
+			}else {
+				if(numberofMachine.equalsIgnoreCase("one")) {
+					DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",0);
+					Thread.sleep(3000);
+					DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"Machines",1);	
+					String data=tp.MachinesFeildTitle.getAttribute("title");
+				    System.out.println(data);
+				    String data2=tp.MachineOneActiveFields.getText();		    
+				    if(data.contains(data2))
+			    		test.log(LogStatus.PASS, "User is able to select only One Machine and selected machine is visible");	
+				    else
+				    	test.log(LogStatus.FAIL, " Either machine was not selected or selected machine is not visible after selection ");				
+				}
+				
+				if(numberofMachine.equalsIgnoreCase("multiple"))
+				{
+					DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",0);
+					Thread.sleep(1000);
+					String screenshotPath = ExtentReportHelper.getScreenshot();
+					test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));				
+					if(tp.MachineList.size()==2) {
+						test.log(LogStatus.INFO, "For the selected account only one machine is available to Select");
+					}else{
+						DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"machine", 1);
+						DropDownHelper.selectRandomElementFromDivList(tp.MachineList,"machine", 1);
+						int size1=tp.MachineActiveFieldsList.size();
+						if(size1>1)
+							test.log(LogStatus.PASS, "User is able to select multiple Machines and selected machines are visible");	
+					    else
+							test.log(LogStatus.FAIL, " Either multiple the machines were not selected or machines are not visible after selection ");
+					}
+				}
+				
+				if(numberofMachine.equalsIgnoreCase("All")) {
+					DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+					Thread.sleep(1000);
+					DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
+					int size1=tp.MachineActiveFieldsList.size();
+					int size2=tp.MachineList.size();
+					size1++;
+					if(size1==size2)
+						test.log(LogStatus.PASS, "User is able to select All Machines and selected machines are visible");	
+				    else
+						test.log(LogStatus.FAIL, " Either all the machines were not selected or machines are not visible after selection ");
+				}
 			}
-		    
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.PASS, "User was able to create new task successfully");
+				Thread.sleep(2000);
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else{
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}			
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
@@ -1165,18 +1239,20 @@ public class Stepdefination {
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 30);
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
 			  wait.until(ExpectedConditions.alertIsPresent());
 			driver.switchTo().alert().accept();
-			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname))
-				test.log(LogStatus.PASS, "User was able to create new task successfully With TaskType "+data);	
-			else
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.PASS, "User was able to create new task successfully With TaskType "+data);
+				Thread.sleep(2000);
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task With TaskType "+data);	
-			tp.DeleteTask.click();			
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
-			driver.switchTo().alert().accept();
-			Thread.sleep(2000);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
@@ -1200,31 +1276,44 @@ public class Stepdefination {
 		}
 	}
         
-    public static void EndDateFieldDisplayed() {
-    	try {   
-			HomePageSideBar hps = new HomePageSideBar(driver);	
+    public static void EndDateFieldDisplayed(String Taskname, String Description,String dueDate) {
+    	try {   				
+			BasicCreateTaskHalfHelper(Taskname,Description,dueDate);
 			TaskPage tp=new TaskPage(driver);
-			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
-			ButtonHelper.click(tp.createTask, "Create task button");
 			ButtonHelper.click(tp.ScheduleDailyBtn, "Schedule Daily Button");
 			Thread.sleep(2000);
 		    if(tp.taskRepeatEndDate.isDisplayed())
 	    		test.log(LogStatus.PASS,  "Selecting Schedule Daily Button Select End Date Field Is Displayed");	
 		    else
 				test.log(LogStatus.FAIL, "Selecting Schedule Daily Button Select End Date Field Is Not Displayed");
-					
+		    DropDownHelper.selectRandomElementByIndex(tp.taskRepeatEndDate,"Task Repeat End Date");
+		    String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+		    ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+				Thread.sleep(2000);
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else {
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}					
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
     
-    public static void selectScheduleWeekly() {
-    	try {   
-			HomePageSideBar hps = new HomePageSideBar(driver);	
+    public static void selectScheduleWeekly(String Taskname, String Description,String dueDate) {
+    	try {   			
+			BasicCreateTaskHalfHelper(Taskname,Description,dueDate);
 			TaskPage tp=new TaskPage(driver);
-			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
-			ButtonHelper.click(tp.createTask, "Create task button");
 			ButtonHelper.click(tp.ScheduleWeeklyBtn, "Schedule weekly Button");
 			Thread.sleep(3000);
 		    if(tp.WeeklytaskRepeatEndDate.isDisplayed())
@@ -1249,13 +1338,34 @@ public class Stepdefination {
 	    		test.log(LogStatus.PASS,  "Use is able to select alternative week or every week as schedule");	
 		    else
 				test.log(LogStatus.FAIL, "Use is not able to select alternative week or every week as schedule");
+			DropDownHelper.selectRandomElementByIndex(tp.selectWeek,"task repeat fequency every week or altenate week");
+			tp=new TaskPage(driver);
+			ButtonHelper.click(tp.Fri, "Day of thr week");
+			DropDownHelper.selectRandomElementByIndex(tp.WeeklytaskRepeatEndDate,"Task Repeat End Date");			
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			 ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			WebDriverWait wait = new WebDriverWait(driver, 50);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+				Thread.sleep(2000);
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else {
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}					
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
     
-    public static void selectScheduleMonthly() {
+    public static void selectScheduleMonthly(String Taskname, String Description,String dueDate) {
     	try {   
 			HomePageSideBar hps = new HomePageSideBar(driver);	
 			TaskPage tp=new TaskPage(driver);
@@ -1287,14 +1397,74 @@ public class Stepdefination {
 		}
 	}
     
+    public static void DownloadExcelInstructionPopUp() {
+    	try { 
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.DownloadExcel,"Download Excel Button");
+			Thread.sleep(1000);
+			if(tp.CloseDownloadExcel.isDisplayed()&&tp.DownloadSampleExcelonPopUP.isDisplayed())
+				test.log(LogStatus.PASS,  "On Clicking Download Excel an instruction pop up window is displayed ");	
+		    else
+				test.log(LogStatus.FAIL, "On Clicking Download Excel No instruction pop up window is displayed ");
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+    	}
+    }
     
+    public static void CloseDownloadExcelInstructionPopUp(){
+    	try { 
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.DownloadExcel,"Download Excel Button");
+			Thread.sleep(1000);
+			ButtonHelper.click(tp.CloseDownloadExcel, "close Download Excel Instruction Pop Up icon");
+			if(tp.createTask.isDisplayed()&&tp.DownloadExcel.isDisplayed())
+				test.log(LogStatus.PASS,  "On Clicking close Icon on Download Excel instruction pop up window the Pop up window is closed");	
+		    else
+				test.log(LogStatus.FAIL, "On Clicking close Icon on Download Excel instruction pop up window the pop up window is not closed");
+	    }catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+	}
     
-    
-    
-    
-    
-    
-    
+    public static void DownloadSampleExcel(){
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.DownloadExcel,"Download Excel Button");
+			Thread.sleep(1000);
+			ButtonHelper.click(tp.DownloadSampleExcelonPopUP,"Download Sample Excel Button on popup window");
+			Thread.sleep(30000);
+			int num=GenericElements.NumberOfFilesInPresentInFolder(System.getProperty("user.home")+"\\Downloads");
+			boolean check=false;
+			for(int i=1;i<=num;i++)
+			{
+				if(GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_download_sample_excel_taskpage")+"."+ExcelReader.ReadTestData("extention_download_sample_excel_taskpage"))) {
+					check=true;
+					break;
+				}else{
+					check=GenericElements.isFileDownloaded(System.getProperty("user.home")+"\\Downloads",ExcelReader.ReadTestData("name_download_sample_excel_taskpage")+"("+i+")."+ExcelReader.ReadTestData("extention_download_sample_excel_taskpage"));
+					if(check)
+						break;
+				}
+			}
+			if(check) {				
+				test.log(LogStatus.PASS, "Use Is Able To Download a Sample Excel File After Clicking Download sample excel button");	
+			}else {
+				test.log(LogStatus.FAIL, "Use Is Not Able To Download a Sample Excel File After Clicking Download sample excel button");
+				test.log(LogStatus.INFO, "Name And extension of the downloded file should be same as present in test data");
+			}
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+	}
     
     
     

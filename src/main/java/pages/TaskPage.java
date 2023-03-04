@@ -140,6 +140,10 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public WebElement MachinesFeildTitle;
 	
+	@FindBy(xpath = "//label[@for='option-e']")
+	@CacheLookup
+	public  WebElement Fri;
+	
 	
 	//create task pop up ends
 	
@@ -152,11 +156,22 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement DeleteTask;
 	
+	@FindBy(xpath = "//*[@id='Instruction_Task_Excel']/div/div/div/button[@class='close']")
+	@CacheLookup
+	public  WebElement CloseDownloadExcel;
 	
 	
+	@FindBy(xpath = "//a[@target='_blank']/img")
+	@CacheLookup
+	public  WebElement DownloadSampleExcelonPopUP;
+	
+	@FindBy(xpath = "//span[contains(text(),'Download Excel')]")
+	@CacheLookup
+	public  WebElement DownloadExcel;
 	
 	
-	
-	
+	@FindBy(xpath = "//button[@data-target='#uploadCSV']/span")
+	@CacheLookup
+	public  WebElement UploadExcel;
 
 }

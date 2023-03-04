@@ -39,17 +39,14 @@ public class ExcelReader {
 	            }
 	            return null;
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.out.println( "Unable to Read Test Data sheet");
 			return null;
 		}
 	}
 	
-	
-	
-	
-	
 	public static Sheet ReadExcel(String filepath, String sheetName) throws Exception {
-		File excelFile =    new File(filepath);
+		File excelFile = new File(filepath);
 		try {
 				FileInputStream inputStream = new FileInputStream(excelFile);
 				Workbook excelworkbook = null;

@@ -123,7 +123,7 @@ public class TestCases extends BaseTest {
 	@Test (enabled=true)
 	public static void Test_User_Profile_Data_Is_Editable_And_When_Updated_Changes_Are_Visible_Dashboard() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.editUserProfile("TestROBOT","9500124390","ELITE AUTOMATIONS");
+		Stepdefination.editUserProfile(ExcelReader.ReadTestData("edit_profile_user_name"),ExcelReader.ReadTestData("edit_profile_user_contact_num"),ExcelReader.ReadTestData("edit_profile_company_name"));
 	}
 	
 	@Test(enabled=true)
@@ -213,49 +213,49 @@ public class TestCases extends BaseTest {
 	@Test (enabled=true)
 	public static void Test_User_is_Able_To_Create_New_Task() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTask("test task","this is my test task","20032023");
+		Stepdefination.CreateTask(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
 	@Test(enabled=true)
 	public static void TC35A_Verify_that_if_No_Task_Name_Is_Entered_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","TaskName");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"TaskName");
 	}
 	
 	@Test(enabled=true)
 	public static void TC35B_Verify_that_if_No_service_engineer_is_Selected_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","ServiceEngineer");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"ServiceEngineer");
 	}
 	
 	@Test(enabled=true)
 	public static void TC35C_Verify_that_if_No_Account_is_Selected_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","SelectedAccount");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"SelectedAccount");
 	}
 	
 	@Test(enabled=true)
 	public static void TC35D_Verify_that_if_No_Due_Date_Is_Entered_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","DueDate");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"DueDate");
 	}
 		
 	@Test(enabled=true)
 	public static void TC35E_Verify_that_if_Machines_Are_Not_Selected_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","Machines");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"Machines");
 	}
 	
 	@Test(enabled=true)
 	public static void TC35F_Verify_that_if_TaskType_Is_Not_Selected_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithMissingFields("test task","this is my test task","20032023","TaskType");
+		Stepdefination.CreateTaskWithMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"TaskType");
 	}	
 	
 	@Test(enabled=true)
 	public static void TC36_Verify_that_if_there_are_no_service_engineer_Accounts_and_machines_are_not_added_an_error_message_is_dispayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithThreeMissingFields("test task","this is my test task","20032023");
+		Stepdefination.CreateTaskWithThreeMissingFields(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
 	@Test(enabled=true)
@@ -273,13 +273,13 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void Verify_That_User_Is_Able_To_Select_machines_And_Selected_Machines_Are_visible() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.VerifyMachinesFeildIsShowing();;
+		Stepdefination.VerifyMachinesFeildIsShowing();
 	}
 	
 	@Test(enabled=true)
 	public static void Verify_That_Watchers_Field_Is_Disabled_Untill_Service_Engineer_Is_Not_Selected() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.WatcherDisabled("test task","this is my test task","20032023");
+		Stepdefination.WatcherDisabled(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
 	@Test(enabled=true)
@@ -292,25 +292,25 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void Verify_That_machines_Field_Is_Disabled_Untill_Account_Is_Not_Selected() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.MachinesDisabled("test task","this is my test task","20032023");
+		Stepdefination.MachinesDisabled(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
 	@Test(enabled=true)
 	public static void Verify_That_User_Is_Able_To_Select_A_Single_Machine() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.VerifymultipleMachinesCanBeSelected("one");
+		Stepdefination.VerifymultipleMachinesCanBeSelected(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"one");
 	}
 	
-	@Test(enabled=true)
-	public static void Verify_That_User_Is_Able_To_Select_More_Than_One_the_Machine() {
+	@Test(enabled=true)//impr
+	public static void Verify_That_User_Is_Able_To_Select_More_Than_One_Macine() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.VerifymultipleMachinesCanBeSelected("Multiple");
+		Stepdefination.VerifymultipleMachinesCanBeSelected(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"Multiple");
 	}
 
-	@Test(enabled=false)
-	public static void Verify_That_User_Is_Able_To_Select_All_the_Machines() {
+	@Test(enabled=true)
+	public static void Verify_That_User_Is_Able_To_Select_All_the_Machines(){
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.VerifymultipleMachinesCanBeSelected("All");
+		Stepdefination.VerifymultipleMachinesCanBeSelected(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"All");
 	}
 	
 	@Test(enabled=true)
@@ -322,25 +322,25 @@ public class TestCases extends BaseTest {
 	@Test (enabled=true)
 	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Solcare_Service_As_TaskType() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",1);
+		Stepdefination.CreateTaskWithDifferentTaskTypes(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),1);
 	}
 	
 	@Test (enabled=true)
 	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Oil_Skimming_As_TaskType() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",2);
+		Stepdefination.CreateTaskWithDifferentTaskTypes(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),2);
 	}
 	
 	@Test (enabled=true)
 	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Sump_Cleaning_As_TaskType() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",3);
+		Stepdefination.CreateTaskWithDifferentTaskTypes(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),3);
 	}
 	
 	@Test (enabled=true)
 	public static void Verify_Test_User_is_Able_To_Create_New_Task_With_Bacteria_Fungi_Check_As_TaskType() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.CreateTaskWithDifferentTaskTypes("test task","this is my test task","20032023",4);
+		Stepdefination.CreateTaskWithDifferentTaskTypes(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),4);
 	}
 	
 	@Test (enabled=true)
@@ -352,20 +352,37 @@ public class TestCases extends BaseTest {
 	@Test (enabled=true)
 	public static void Verify_On_selecting_Schedule_Daily_Button_Select_End_Date_Field_Should_Be_Displayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.EndDateFieldDisplayed();
+		Stepdefination.EndDateFieldDisplayed(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
 	@Test (enabled=true)
 	public static void Verify_On_selecting_Schedule_weekly_Button_Select_End_Date_Field_And_Select_Week_and_WeekDays_Should_Be_Displayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.selectScheduleWeekly();;
+		Stepdefination.selectScheduleWeekly(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));;
 	}
 	
 	@Test (enabled=true)
-	public static void Verify_On_selecting_Schedule_weekly_Button_Select_End_Date_Field_And_Select_month_DropDown_Should_Be_Displayed() {
+	public static void Verify_On_selecting_Schedule_monthly_Button_Select_End_Date_Field_And_Select_month_DropDown_Should_Be_Displayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.selectScheduleMonthly();
+		Stepdefination.selectScheduleMonthly(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
 	
+	@Test (enabled=true)
+	public static void Verify_On_clicking_Download_Excel_An_Instruction_Pop_Up_Is_Displayed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.DownloadExcelInstructionPopUp();
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_clicking_Close_Icon_Download_Excel_Instruction_Pop_Up_Is_Closed() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CloseDownloadExcelInstructionPopUp();;
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.DownloadSampleExcel();
+	}
 	
 }
