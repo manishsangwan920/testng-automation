@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="58" total="59" passed="1" failed="0" skipped="0">
+<testng-results ignored="59" total="60" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2023-03-04T23:05:42 IST" name="Default suite" finished-at="2023-03-04T23:06:50 IST" duration-ms="68087">
+  <suite started-at="2023-03-08T23:17:35 IST" name="Default suite" finished-at="2023-03-08T23:20:16 IST" duration-ms="161114">
     <groups>
     </groups>
-    <test started-at="2023-03-04T23:05:42 IST" name="Default test" finished-at="2023-03-04T23:06:50 IST" duration-ms="68087">
+    <test started-at="2023-03-08T23:17:35 IST" name="Default test" finished-at="2023-03-08T23:20:16 IST" duration-ms="161114">
       <class name="TestCases.TestCases">
-        <test-method is-config="true" signature="setUp()[pri:0, instance:TestCases.TestCases@8dbdac1]" started-at="2023-03-04T23:05:41 IST" name="setUp" finished-at="2023-03-04T23:05:42 IST" duration-ms="99" status="PASS">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:TestCases.TestCases@4fb0f2b9]" started-at="2023-03-08T23:17:34 IST" name="setUp" finished-at="2023-03-08T23:17:35 IST" duration-ms="284" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUp -->
-        <test-method is-config="true" signature="beforeTest(java.lang.reflect.Method)[pri:0, instance:TestCases.TestCases@8dbdac1]" started-at="2023-03-04T23:05:42 IST" name="beforeTest" finished-at="2023-03-04T23:05:52 IST" duration-ms="10565" status="PASS">
+        <test-method is-config="true" signature="beforeTest(java.lang.reflect.Method)[pri:0, instance:TestCases.TestCases@4fb0f2b9]" started-at="2023-03-08T23:17:35 IST" name="beforeTest" finished-at="2023-03-08T23:18:06 IST" duration-ms="31461" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[public static void TestCases.TestCases.Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded()]]>
+                <![CDATA[public static void TestCases.TestCases.Test_User_is_Able_To_Create_New_Task()]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeTest -->
-        <test-method signature="Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded()[pri:0, instance:TestCases.TestCases@8dbdac1]" started-at="2023-03-04T23:05:52 IST" name="Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded" finished-at="2023-03-04T23:06:50 IST" duration-ms="57337" status="PASS">
+        <test-method signature="Test_User_is_Able_To_Create_New_Task()[pri:0, instance:TestCases.TestCases@4fb0f2b9]" started-at="2023-03-08T23:18:06 IST" name="Test_User_is_Able_To_Create_New_Task" finished-at="2023-03-08T23:20:16 IST" duration-ms="129408" status="PASS">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded -->
-        <test-method is-config="true" signature="afterTest()[pri:0, instance:TestCases.TestCases@8dbdac1]" started-at="2023-03-04T23:06:50 IST" name="afterTest" finished-at="2023-03-04T23:06:50 IST" duration-ms="160" status="PASS">
+        </test-method> <!-- Test_User_is_Able_To_Create_New_Task -->
+        <test-method is-config="true" signature="afterTest()[pri:0, instance:TestCases.TestCases@4fb0f2b9]" started-at="2023-03-08T23:20:16 IST" name="afterTest" finished-at="2023-03-08T23:20:16 IST" duration-ms="230" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterTest -->
-        <test-method is-config="true" signature="endReport()[pri:0, instance:TestCases.TestCases@8dbdac1]" started-at="2023-03-04T23:06:50 IST" name="endReport" finished-at="2023-03-04T23:06:50 IST" duration-ms="130" status="PASS">
+        <test-method is-config="true" signature="endReport()[pri:0, instance:TestCases.TestCases@4fb0f2b9]" started-at="2023-03-08T23:20:16 IST" name="endReport" finished-at="2023-03-08T23:20:16 IST" duration-ms="350" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- endReport -->

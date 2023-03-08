@@ -385,4 +385,10 @@ public class TestCases extends BaseTest {
 		Stepdefination.DownloadSampleExcel();
 	}
 	
+	@Test (enabled=true)
+	public static void Verify_On_clicking_upload_Excel_A_Pop_Up_Is_Displayed_which_Has_Options_To_Upload_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelDisplayed();
+	}
+	
 }

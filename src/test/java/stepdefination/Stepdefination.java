@@ -1467,7 +1467,22 @@ public class Stepdefination {
 	}
     
     
-    
+    public static void uploadExcelDisplayed() {
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.UploadExcelButton, "Upload Excel Button on TaskPage");
+			Thread.sleep(1000);
+			if(tp.UploadExcelInput.isDisplayed()&&tp.UploadExcelButtonPopup.isDisplayed())
+				test.log(LogStatus.PASS,  "On Clicking upload Excel an pop up window is displayed which has choose File and upload option ");	
+		    else
+				test.log(LogStatus.FAIL, "On Clicking upload Excel No pop up window is displayed ");
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
     
     

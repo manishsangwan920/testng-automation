@@ -172,6 +172,17 @@ public class TaskPage extends PageBase {
 	
 	@FindBy(xpath = "//button[@data-target='#uploadCSV']/span")
 	@CacheLookup
-	public  WebElement UploadExcel;
-
+	public  WebElement UploadExcelButton;
+	
+	
+	@FindBy(xpath = "//input[@id='excelFile']")
+	@CacheLookup
+	public  WebElement UploadExcelInput;
+	
+	@FindBy(xpath = "//*[@id='uploadTask']")
+	@CacheLookup
+	public  WebElement UploadExcelButtonPopup;
+	
+	
+	
 }
