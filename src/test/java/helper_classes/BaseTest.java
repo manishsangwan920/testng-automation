@@ -5,6 +5,8 @@ import static settings.ObjectRepo.test;
 
 import java.lang.reflect.Method;
 import java.sql.Driver;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.mail.EmailException;
 import org.testng.ITestContext;
@@ -19,6 +21,7 @@ import com.relevantcodes.extentreports.LogStatus;
 
 import browserconfig.BrowserType;
 import browserconfig.InitializeWebDriver;
+import configreader.ExcelReader;
 import configreader.PropertyFileReader;
 import reporting.ExtentReportHelper;
 import settings.ObjectRepo;
@@ -26,10 +29,14 @@ import settings.ObjectRepo;
 public class BaseTest {
 
 	@BeforeSuite
-	public void setUp() {
+	public void setUp() throws Exception {
 		System.out.println("Setting Up Test Suite");
 		ExtentReportHelper.setUpReport();
 		ObjectRepo.reader = new PropertyFileReader();
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+		LocalDateTime now = LocalDateTime.now(); 
+		LocalDateTime Date = now.plusDays(4);
+		ExcelReader.updateTestDataExcel("duedate",dtf.format(Date));
 	}
 	
 	@BeforeMethod

@@ -8,8 +8,8 @@
           <include name="setUp"/>
           <include name="beforeTest"/>
           <include name="afterTest"/>
+          <include name="Test_If_An_Error_Message_Is_Displayed_When_User_Upload_An_Empty_Excel"/>
           <include name="endReport"/>
-          <include name="Verify_On_clicking_Download_Sample_Excel_on_Instruction_Pop_Up_An_Excel_File_Is_Downloaded"/>
         </methods>
       </class> <!-- TestCases.TestCases -->
     </classes>

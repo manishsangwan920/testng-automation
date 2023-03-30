@@ -109,6 +109,20 @@ public class HomePage extends PageBase {
 	@CacheLookup
 	public  WebElement closeResetPasswordWindow;
 	
+	@FindBy(xpath = "//*[@id='number']")
+	@CacheLookup
+	public  WebElement verifyNumber;
+	
+	@FindBy(xpath = "//*[@id='capital']")
+	@CacheLookup
+	public  WebElement verifyCapitalLetter;
+	
+	@FindBy(xpath = "//*[@id='length']")
+	@CacheLookup
+	public  WebElement verifyLength;
+	
+	
+	
 	@FindBy(id = "event2")
 	@CacheLookup
 	public  WebElement resetPasswordSubmit;

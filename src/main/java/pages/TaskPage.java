@@ -94,10 +94,19 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement selectWeek;
 	
-	
 	@FindBy(id = "selectMonth")
 	@CacheLookup
 	public  WebElement selectMonth;
+	
+
+	@FindBy(id = "selectDate")
+	@CacheLookup
+	public  WebElement selectDate;
+	
+	@FindBy(id = "selectDate")
+	@CacheLookup
+	public List<WebElement> selectDateList;
+	
 	
 	@FindBy(xpath = "//button[@onclick='resetMyModalPopUp()']")
 	@CacheLookup
@@ -114,7 +123,6 @@ public class TaskPage extends PageBase {
 	@FindBy(id = "MachineFunc")
 	@CacheLookup
 	public  WebElement Enabledmachine;
-	
 	
 	@FindBy(xpath = "//*[@id=\"weeklyBlock\"]/div[1]")
 	@CacheLookup
@@ -144,9 +152,19 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement Fri;
 	
+	@FindBy(id = "enggGroup")
+	@CacheLookup
+	public List<WebElement> listServiceEngineer;
+	
+	@FindBy(id = "selectedAccount")
+	@CacheLookup
+	public List<WebElement> ListAccount;
+		
+	@FindBy(xpath = "//*[@id=\"MachineFunc\"]/div/button/span")
+	@CacheLookup
+	public  WebElement verifySelectedMachine ;
 	
 	//create task pop up ends
-	
 		
 	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[1]")
 	@CacheLookup
@@ -184,5 +202,17 @@ public class TaskPage extends PageBase {
 	public  WebElement UploadExcelButtonPopup;
 	
 	
+	@FindBy(xpath = "//*[@id='failedTaskRender']/tr/td[8]")
+	@CacheLookup
+	public  WebElement TaskFailLog;
 	
+	
+	@FindBy(id = "dateInput")
+	@CacheLookup
+	public WebElement DateFilter;
+	
+	
+	@FindBy(xpath = "//button[@onclick='resetData()']")
+	@CacheLookup
+	public  WebElement ResetFilters;
 }

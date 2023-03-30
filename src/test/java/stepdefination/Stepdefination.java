@@ -9,25 +9,31 @@ import static settings.ObjectRepo.test;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
@@ -41,6 +47,9 @@ import elementhelper.ButtonHelper;
 import elementhelper.DropDownHelper;
 import elementhelper.TextBoxHelper;
 import generic.GenericHelper;
+import pages.AccountPage;
+import pages.AddMachinesPage;
+import pages.AddServiceEngineerPage;
 import pages.HomePage;
 import pages.HomePageSideBar;
 import pages.LoginPage;
@@ -92,8 +101,8 @@ public class Stepdefination {
 		try {
 			LoginPage lp = new LoginPage(driver);
 			HomePage hp = new HomePage(driver);
-			TextBoxHelper.enterText(lp.emailTextBox, "User Name",userName);
-			TextBoxHelper.enterText(lp.passwordTextBox, "Password",password);
+			TextBoxHelper.enterTextString(lp.emailTextBox, "User Name",userName);
+			TextBoxHelper.enterTextString(lp.passwordTextBox, "Password",password);
 			ButtonHelper.click(lp.checkBox, "Terms and Conditions Checkbox");
 			ButtonHelper.click(lp.loginButton, "Login Button");	
 			String DashBoard =hp.dashboard.getText();
@@ -111,8 +120,8 @@ public class Stepdefination {
 	public static void VerifyInvalidLogin(String userName, String password)  {
 		try {
 			LoginPage lp = new LoginPage(driver);
-			TextBoxHelper.enterText(lp.emailTextBox, "User Name",userName);
-			TextBoxHelper.enterText(lp.passwordTextBox, "Password",password);
+			TextBoxHelper.enterTextString(lp.emailTextBox, "User Name",userName);
+			TextBoxHelper.enterTextString(lp.passwordTextBox, "Password",password);
 			ButtonHelper.click(lp.checkBox, "Terms and Conditions Checkbox");
 			ButtonHelper.click(lp.loginButton, "Login Button");
 			Thread.sleep(3000);
@@ -131,8 +140,8 @@ public class Stepdefination {
 		try {
 			LoginPage lp = new LoginPage(driver);
 			HomePage hp = new HomePage(driver);
-			TextBoxHelper.enterText(lp.emailTextBox, "User Name",userName);
-			TextBoxHelper.enterText(lp.passwordTextBox, "Password",password);
+			TextBoxHelper.enterTextString(lp.emailTextBox, "User Name",userName);
+			TextBoxHelper.enterTextString(lp.passwordTextBox, "Password",password);
 	    	   if(lp.loginButton.isEnabled()) {
 	    		   ButtonHelper.click(lp.loginButton, "Login Button");
 	    		   String dash =hp.dashboard.getText();
@@ -332,7 +341,7 @@ public class Stepdefination {
 			Thread.sleep(3000);
 			String chromeMessage = driver.switchTo().alert().getText();
 			driver.switchTo().alert().accept();			
-			  if(pp.profilePicture.isDisplayed()&&chromeMessage.equalsIgnoreCase("Your profile picture is successfully updated."))
+			  if(pp.profilePicture.isDisplayed()&&chromeMessage.equalsIgnoreCase("user profile picture is successfully updated."))
 				  test.log(LogStatus.PASS, "Profile Picture was uploaded and saved successfully");
 		         else
 				test.log(LogStatus.FAIL, "either profile picture was not uploaded or it was not saved");				
@@ -434,11 +443,11 @@ public class Stepdefination {
 		    	else
 		    		test.log(LogStatus.FAIL, "company name is not  editable");
 		    pp.editProfileName.clear();
-		    TextBoxHelper.enterText(pp.editProfileName, "Name", name);
+		    TextBoxHelper.enterTextString(pp.editProfileName, "Name", name);
 		    pp.editProfilePhone.clear();
-		    TextBoxHelper.enterText(pp.editProfilePhone, "PHONE", phNumber);
+		    TextBoxHelper.enterTextString(pp.editProfilePhone, "PHONE", phNumber);
 		    pp.editProfileCompany.clear();
-		    TextBoxHelper.enterText(pp.editProfileCompany, "Company", companyname);
+		    TextBoxHelper.enterTextString(pp.editProfileCompany, "Company", companyname);
 		    ButtonHelper.click(pp.editProfileSave, "Save Button");
 		    Thread.sleep(3000);
 		    driver.switchTo().alert().accept();	
@@ -480,9 +489,9 @@ public class Stepdefination {
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
 			ButtonHelper.click(hp.resetPassword," Reset Password");
 			Thread.sleep(3000);
-			TextBoxHelper.enterText(hp.existingPassword,"Existing password",oldpassword);
-			TextBoxHelper.enterText(hp.newPassword,"new password",newpassword);
-			TextBoxHelper.enterText(hp.confirmPassword,"new password",newpassword);
+			TextBoxHelper.enterTextString(hp.existingPassword,"Existing password",oldpassword);
+			TextBoxHelper.enterTextString(hp.newPassword,"new password",newpassword);
+			TextBoxHelper.enterTextString(hp.confirmPassword,"new password",newpassword);
 			ButtonHelper.click(hp.resetPasswordSubmit," Submit Button");
 			Thread.sleep(3000);
 			if(driver.switchTo().alert().getText().equalsIgnoreCase("The existing password does not match with the password you have provided. Please type your correct existing password and try again."))
@@ -501,14 +510,94 @@ public class Stepdefination {
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
 			ButtonHelper.click(hp.resetPassword," Reset Password");
 			Thread.sleep(3000);
-			TextBoxHelper.enterText(hp.existingPassword,"Existing password",oldpassword);
-			TextBoxHelper.enterText(hp.newPassword,"new password",newpassword);
-			TextBoxHelper.enterText(hp.confirmPassword,"confirm password",confpassword);
+			TextBoxHelper.enterTextString(hp.existingPassword,"Existing password",oldpassword);
+			TextBoxHelper.enterTextString(hp.newPassword,"new password",newpassword);
+			TextBoxHelper.enterTextString(hp.confirmPassword,"confirm password",confpassword);
 			Thread.sleep(3000);
 			if(hp.errorMsgPasswordMismatch.isDisplayed()&&hp.errorMsgPasswordMismatch.getText().equalsIgnoreCase("Password are not matching"))
 				test.log(LogStatus.PASS, "Error Message is displayed when new password and confirm password are not matching while reseting password");
         		else
         			test.log(LogStatus.FAIL, "NO Error Message is displayed when new password and confirm password are not matching while reseting password");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		} 		
+	}
+	
+	public static void PasswordMeetingCriteria() {
+		try {
+			HomePage hp = new HomePage(driver);
+			ButtonHelper.click(hp.profileIcon, "profile icon");		
+			ButtonHelper.click(hp.resetPassword," Reset Password");
+			Thread.sleep(3000);
+			String randomNumber = Integer.toString(ThreadLocalRandom.current().nextInt(0,9));
+			System.out.println(randomNumber);
+			TextBoxHelper.enterTextString(hp.newPassword,"new password",randomNumber);
+			if(hp.verifyNumber.getAttribute("class").equalsIgnoreCase("valid"))
+				test.log(LogStatus.PASS, "If User Enter A Number 'At least One number' criteria is satisfied");
+    		else
+    			test.log(LogStatus.FAIL, "If User Enter A Number 'At least One number' criteria is Not satisfied");	
+			String C1 = "QWERTYUIOPLKJHGFDSAZXCVBNM";
+			String capitalletter = Character.toString(C1.charAt(ThreadLocalRandom.current().nextInt(C1.length())));
+			System.out.println(capitalletter);
+			 TextBoxHelper.enterTextString(hp.newPassword,"new password",capitalletter);
+			if(hp.verifyCapitalLetter.getAttribute("class").equalsIgnoreCase("valid"))
+				test.log(LogStatus.PASS, "If User Enter A Uppercase Letter 'At least One capital Letter' criteria is satisfied");
+    		else
+    			test.log(LogStatus.FAIL, "If User Enter A UpperCase letter 'At least One capital Letter' criteria is Not satisfied");
+		        String generatedString = RandomStringUtils.randomAlphabetic(4);
+		        System.out.println(generatedString);
+		        String completepassword=generatedString+capitalletter+randomNumber;
+		        TextBoxHelper.enterTextString(hp.newPassword,"new password",completepassword);
+			if(hp.verifyNumber.getAttribute("class").equalsIgnoreCase("valid"))
+				test.log(LogStatus.PASS, "If User Enter  more than six letters 'At least contains six Letter' criteria is satisfied");
+        		else
+        			test.log(LogStatus.FAIL,"If User Enter more than six letters 'At least contains six Letter' criteria is Not satisfied");
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		} 		
+	}
+
+	public static void ResetPassword(String userName,String reseted_password,String welcomeName) {
+		try {
+			HomePage hp = new HomePage(driver);
+			ButtonHelper.click(hp.profileIcon, "profile icon");		
+			ButtonHelper.click(hp.resetPassword," Reset Password");
+			Thread.sleep(3000);
+			TextBoxHelper.enterTextString(hp.existingPassword,"Existing password",ExcelReader.ReadTestData("password"));
+			TextBoxHelper.enterTextString(hp.newPassword,"new password",ExcelReader.ReadTestData("reseted_password"));
+			TextBoxHelper.enterTextString(hp.confirmPassword,"confirm password",ExcelReader.ReadTestData("reseted_password"));
+			ButtonHelper.click(hp.resetPasswordSubmit," Submit Button");
+			WebDriverWait wait = new WebDriverWait(driver, 50);
+			wait.until(ExpectedConditions.alertIsPresent());
+			if(driver.switchTo().alert().getText().equalsIgnoreCase("Your pasword has been successfully reset."))
+				test.log(LogStatus.PASS, "User was able to reset password");
+			else
+				test.log(LogStatus.FAIL, "User was not able reset password"); 
+			driver.switchTo().alert().accept();
+			ButtonHelper.click(hp.profileIcon, "profile icon");		
+			ButtonHelper.click(hp.logoutButton," Logout Button under Profile icon");
+			LoginPage lp = new LoginPage(driver);			
+			TextBoxHelper.enterTextString(lp.emailTextBox, "User Name",userName);
+			TextBoxHelper.enterTextString(lp.passwordTextBox, "Password",reseted_password);
+			ButtonHelper.click(lp.checkBox, "Terms and Conditions Checkbox");
+			ButtonHelper.click(lp.loginButton, "Login Button");
+			HomePage hp1 = new HomePage(driver);
+			 if(hp.dashboard.getText().equals(welcomeName))
+				   test.log(LogStatus.PASS, "User successfull logged into the application with new reseted password");
+			 else
+				   test.log(LogStatus.FAIL, "User was not able to login to application with the new reseted password");
+			 hp1.profileIcon.click();
+			 hp1.resetPassword.click();			
+			 hp1.existingPassword.sendKeys(ExcelReader.ReadTestData("reseted_password"));
+			 hp1.newPassword.sendKeys(ExcelReader.ReadTestData("password"));
+			 hp1.confirmPassword.sendKeys(ExcelReader.ReadTestData("password"));
+			 hp1.resetPasswordSubmit.click();
+			 wait.until(ExpectedConditions.alertIsPresent());
+			 driver.switchTo().alert().accept();
+			 
+			   
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
@@ -539,9 +628,7 @@ public class Stepdefination {
 			LoginPage lp =new LoginPage(driver);
 			ButtonHelper.click(hp.profileIcon, "profile icon");		
 			ButtonHelper.click(hp.logoutButton," Logout Button under Profile icon");
-			WebDriverWait wait = new WebDriverWait(driver, 50);
-			wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+			
 			if(lp.loginForm.isDisplayed())
 				test.log(LogStatus.PASS, "User logged out of application successfully");
         		else
@@ -557,9 +644,6 @@ public class Stepdefination {
 			LoginPage lp =new LoginPage(driver);
 			HomePageSideBar sb = new HomePageSideBar(driver);
 			ButtonHelper.click(sb.logOutButtonSideBar," Logout Button on Side Bar");
-			WebDriverWait wait = new WebDriverWait(driver, 50);
-			wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
 			if(lp.loginForm.isDisplayed())
 				test.log(LogStatus.PASS, "User logged out of application successfully");
         		else
@@ -790,10 +874,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);		
 			tp=new TaskPage(driver);
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
 			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
@@ -806,7 +890,7 @@ public class Stepdefination {
 				}
 			}catch(NoAlertPresentException e) {				
 			}
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
@@ -839,7 +923,7 @@ public class Stepdefination {
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
 			if(fieldname!="TaskName")
-				TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+				TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			if(fieldname!="ServiceEngineer") {
 				DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 				tp=new TaskPage(driver);
@@ -859,20 +943,20 @@ public class Stepdefination {
 			if(fieldname!="SelectedAccount")
 				DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
 			if(fieldname!="DueDate")
-				TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);						
+				TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);						
 			if(fieldname!="TaskType")
 				DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			if(fieldname=="Machines") {
 				ButtonHelper.click(tp.Enabledmachine, "Machines button");			
 				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
 			}				
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");		
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");					
 			WebDriverWait wait = new WebDriverWait(driver, 50);
 		 	  wait.until(ExpectedConditions.alertIsPresent());
 			  String msg = driver.switchTo().alert().getText();
-			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("This account does not exist."))				
+			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("Task name required"))				
 				test.log(LogStatus.PASS, "error message '"+msg+ "' was displayed when user missed a mandatory field while creating task");
 		    else			
 				test.log(LogStatus.FAIL, "No error message was displayed when user missed a mandatory field while creating task");
@@ -902,10 +986,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);
 			Thread.sleep(2000);			
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"TaskType");				
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
@@ -982,10 +1066,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);					
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);					
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
@@ -1007,10 +1091,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"Service Engineer");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);					
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);					
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
@@ -1046,6 +1130,7 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
+    
     public static void BasicCreateTaskHalfHelper(String Taskname, String Description,String dueDate) {
     	try {  
 			HomePageSideBar hps = new HomePageSideBar(driver);	
@@ -1053,10 +1138,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);		
 			tp=new TaskPage(driver);
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
 			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
@@ -1069,7 +1154,7 @@ public class Stepdefination {
 				}
 			}catch(NoAlertPresentException e) {				
 			}
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
@@ -1079,6 +1164,38 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
     	
+    }
+    
+    public static void VerifyMachineName() {
+    	try {  
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			Thread.sleep(1000);
+			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
+			Thread.sleep(3000);
+			ButtonHelper.click(tp.Enabledmachine, "machine button");
+			String machineName=null;
+			if(DropDownHelper.SizeOfDivList(tp.MachineList)==1||DropDownHelper.SizeOfDivList(tp.MachineList)==1) {
+				machineName=tp.verifySelectedMachine.getText();
+				test.log(LogStatus.INFO,  "For the selected account no machines Are avilable");
+			}
+			else if(DropDownHelper.SizeOfDivList(tp.MachineList)==2) {			
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",0);
+				machineName=DropDownHelper.selectElementByIndexFromDivListGetText(tp.MachineList,"Machines",1);
+			}else {
+				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",0);
+				machineName=DropDownHelper.selectRandomElementFromDivListAndGetText(tp.MachineList,"Machines",0);
+			}				
+			if(machineName.equalsIgnoreCase(tp.verifySelectedMachine.getText()))
+				test.log(LogStatus.PASS,  "Selected machine name displayed is correct");	
+		    else
+				test.log(LogStatus.FAIL, "Selected machine name displayed is not correct");
+    	}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
     }
     
     public static void VerifymultipleMachinesCanBeSelected(String Taskname, String Description,String dueDate, String numberofMachine) {
@@ -1207,10 +1324,10 @@ public class Stepdefination {
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
 			Thread.sleep(4000);
-			TextBoxHelper.enterText(tp.TaskName,"Task Name", Taskname);
+			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
 			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
 			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterText(tp.DueDate,"Due Date", dueDate);		
+			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);		
 			tp=new TaskPage(driver);
 			Thread.sleep(2000);
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
@@ -1225,7 +1342,7 @@ public class Stepdefination {
 				}
 			}catch(NoAlertPresentException e) {				
 			}
-			TextBoxHelper.enterText(tp.TaskDescription,"Description", Description);
+			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			String data=null;
 			if(TaskTypeIndex==1)
 				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 1);
@@ -1359,13 +1476,13 @@ public class Stepdefination {
 			}else {
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}					
-		}catch(Exception e) {
+		}catch(Exception e){
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
     
-    public static void selectScheduleMonthly(String Taskname, String Description,String dueDate) {
+    public static void selectScheduleMonthly(String Taskname, String Description,String dueDate){
     	try {   
 			HomePageSideBar hps = new HomePageSideBar(driver);	
 			TaskPage tp=new TaskPage(driver);
@@ -1396,6 +1513,53 @@ public class Stepdefination {
 			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 		}
 	}
+    
+    public static void selectScheduleMonthlSelectmonth(String Taskname, String Description,String dueDate,boolean everyMonth) {
+    	try {    			
+			BasicCreateTaskHalfHelper(Taskname,Description,dueDate);
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule monthly Button");
+			if(everyMonth)
+				DropDownHelper.selectElementByIndex(tp.selectMonth,"every month", 1);
+			else
+				DropDownHelper.selectElementByIndex(tp.selectMonth,"Alternate month", 2);
+			boolean check=false;
+			for(int i=1;i<=31;i++) {
+				String s=String.valueOf(i);
+				
+				if(tp.selectDateList.get(0).getText().contains(s))
+					check=true;
+			}
+			if(check)
+				test.log(LogStatus.PASS,  "Use is able to see all the dates after selecting schedule every month");	
+		    else
+				test.log(LogStatus.FAIL, "Use is not able to see all the dates after selecting schedule every month");
+			DropDownHelper.selectRandomElementByIndex(tp.selectDate, "Month repeat date");
+			DropDownHelper.selectRandomElementByIndex(tp.MonthlytaskRepeatEndDate, "task Repeat End Date");
+			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
+			WebDriverWait wait = new WebDriverWait(driver, 50);
+			  wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();	
+			Thread.sleep(2000);
+			TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate);
+			Thread.sleep(2000);
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
+				test.log(LogStatus.PASS, "User was able to create new task successfully");	
+				Thread.sleep(2000);
+				tp.DeleteTask.click();			
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+				driver.switchTo().alert().accept();
+				Thread.sleep(2000);
+			}else {
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}					
+		}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+	}
+    
     
     public static void DownloadExcelInstructionPopUp() {
     	try { 
@@ -1485,16 +1649,251 @@ public class Stepdefination {
     }
     
     
+    public static void uploadExcelIsDisabled() {
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.UploadExcelButton, "Upload Excel Button on TaskPage");
+			Thread.sleep(1000);
+			if(tp.UploadExcelButtonPopup.isEnabled())
+				test.log(LogStatus.FAIL,  "On Clicking upload Excel an pop up window is displayed and upload option is enabled even if no file is uploaded ");	
+		    else
+				test.log(LogStatus.PASS, "On Clicking upload Excel an pop up window is displayed and upload option is disabled if no file is uploaded  ");
+			tp.UploadExcelInput.sendKeys(System.getProperty("user.dir")+"\\src\\test\\resources\\TestData\\task_sample.xlsx");
+			if(tp.UploadExcelButtonPopup.isEnabled())
+				test.log(LogStatus.PASS,  "upload option is enabled after uploading a file");	
+		    else
+				test.log(LogStatus.FAIL, "upload option is still disabled even after uploading a file");
+			
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
+    public static void preAvailbleServiceEingeer() {
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			AddServiceEngineerPage se = new AddServiceEngineerPage(driver);
+			ButtonHelper.click(hps.serviceEngineersWatcher, "service Engineers/Watcher Button on sidebar");
+			String elementText="";
+			String abc="";
+			for(int i =0;i<se.AllSeviceEngineersNames.size();i++) {
+				 elementText =se.AllSeviceEngineersNames.get(i).getText(); 
+				 System.out.println(elementText); 
+				}			
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			ButtonHelper.click(tp.ServiceEngineer, "Service Engineer dropDown");			
+			for(int i =0;i<tp.listServiceEngineer.size();i++) {
+				  abc =tp.listServiceEngineer.get(i).getText(); 
+				 System.out.println(abc); 
+				}
+			if(abc.contains(elementText))
+				test.log(LogStatus.PASS,  "All the Service engineer which are present before creating task are visible to vendor while creating the task ");	
+		    else
+				test.log(LogStatus.FAIL, "All the Service engineer which are present before creating task are not visible to vendor while creating the task ");		
+			
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
+    public static void preAvailbleAccount() {
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			AccountPage ac = new AccountPage(driver);
+			ButtonHelper.click(hps.accounts, "accounts Button on sidebar");
+			String elementText="";
+			String abc="";
+			for(int i =0;i<ac.AllAccountNames.size();i++) {
+				 elementText = ac.AllAccountNames.get(i).getText(); 
+				 System.out.println(elementText); 
+				}			
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			ButtonHelper.click(tp.SelectedAccount, "Account dropDown");			
+			for(int i =0;i<tp.ListAccount.size();i++) {
+				  abc =tp.ListAccount.get(i).getText(); 
+				 System.out.println(abc); 
+				}
+			if(abc.contains(elementText))
+				test.log(LogStatus.PASS,  "All the accounts which are present before creating task are visible to vendor while creating the task ");	
+		    else
+				test.log(LogStatus.FAIL, "All the accounts which are present before creating task are not visible to vendor while creating the task ");
+			
+			
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    public static void FillSampleExcel(){ 
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			AddMachinesPage mp = new AddMachinesPage(driver);
+			AddServiceEngineerPage se = new AddServiceEngineerPage(driver);
+			ButtonHelper.click(hps.machines, "Machines Button on sidebar");
+			int num =ThreadLocalRandom.current().nextInt(0,mp.AccountNames.size());
+			String elementText=mp.AccountNames.get(num).getText();
+			ExcelReader.updateSampleExcel("data","Account_name",elementText);
+			ExcelReader.updateSampleExcel("data","Machine_unique_code",mp.MachineUniqueCode.get(num).getText());			
+			ButtonHelper.click(hps.serviceEngineersWatcher, "Service Engineers/Watcher Button on sidebar");
+			int num1 =ThreadLocalRandom.current().nextInt(0,se.AllSeviceEngineersNames.size());
+			String elementText1=se.AllSeviceEngineersNames.get(num1).getText();
+			ExcelReader.updateSampleExcel("data","Watchers",elementText1);
+			int num2 =ThreadLocalRandom.current().nextInt(0,se.AllSeviceEngineersNames.size());
+			for(int i=1;i<=6;i++) {
+				if(num1==num2)
+					num2 =ThreadLocalRandom.current().nextInt(0,se.AllSeviceEngineersNames.size());
+				else
+					break;
+			}			
+			String elementText2=se.AllSeviceEngineersPhone.get(num2).getText();
+			ExcelReader.updateSampleExcel("data","Service_engineer_number",elementText2);		
+			ExcelReader.updateSampleExcel("data","Description",ExcelReader.ReadTestData("taskdescription"));
+			ExcelReader.updateSampleExcel("data","Task_name",ExcelReader.ReadTestData("taskname"));					
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");  
+			LocalDateTime now = LocalDateTime.now(); 
+			LocalDateTime FutureDate = now.plusDays(4);
+			ExcelReader.updateSampleExcel("data","Due_date",dtf.format(FutureDate));
+			System.out.println(dtf.format(FutureDate));
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    	
+    }
+    public static void UploadSampleExcel(){ 
+    	try {
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+    		ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(tp.UploadExcelButton, "Upload Excel Button on TaskPage");
+			Thread.sleep(1000);
+			tp.UploadExcelInput.sendKeys(System.getProperty("user.dir")+"\\src\\test\\resources\\TestData\\task_sample.xlsx");
+			ButtonHelper.click(tp.UploadExcelButtonPopup, "Upload Excel Button on pop up");
+			WebDriverWait wait = new WebDriverWait(driver, 50);
+			wait.until(ExpectedConditions.alertIsPresent());
+			driver.switchTo().alert().accept();	
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
+        
+    public static void uploadMissingFeildExcel(String NameOfMissingFeild) {
+    	try {
+    		FillSampleExcel();   		
+			if(NameOfMissingFeild.equalsIgnoreCase("account"))
+				ExcelReader.updateSampleExcel("data","Account_name","");
+			if(NameOfMissingFeild.equalsIgnoreCase("dueDate"))
+				ExcelReader.updateSampleExcel("data","Due_date","");
+			if(NameOfMissingFeild.equalsIgnoreCase("machinecode"))
+				ExcelReader.updateSampleExcel("data","Machine_unique_code","");
+			if(NameOfMissingFeild.equalsIgnoreCase("serviceengineerphone"))
+				ExcelReader.updateSampleExcel("data","Service_engineer_number","");
+			if(NameOfMissingFeild.equalsIgnoreCase("TaskName"))
+				ExcelReader.updateSampleExcel("data","Task_name","");
+			UploadSampleExcel();
+			TaskPage tp=new TaskPage(driver);
+			if(tp.TaskFailLog.isDisplayed()) {
+				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When Empty Excel File Is Uploded By the User");
+				test.log(LogStatus.INFO,  " Reason Is Displayed Is"+tp.TaskFailLog.getText());
+				
+			}else {
+				test.log(LogStatus.FAIL, "No Error message Is Displayed When User Uploaded An Empty Excel");
+			}
+			
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
+    public static void uploadEmptyExcel() {
+    	try {   		
+			ExcelReader.updateSampleExcel("data","Account_name","");
+			ExcelReader.updateSampleExcel("data","Machine_unique_code","");						
+			ExcelReader.updateSampleExcel("data","Watchers","");		
+			ExcelReader.updateSampleExcel("data","Service_engineer_number","");			
+			ExcelReader.updateSampleExcel("data","Description","");
+			ExcelReader.updateSampleExcel("data","Task_name","");									
+			ExcelReader.updateSampleExcel("data","Due_date","");
+			UploadSampleExcel();
+			TaskPage tp=new TaskPage(driver);			
+			if(tp.TaskFailLog.isDisplayed()) {
+				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When Empty Excel File Is Uploded By the User");
+				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());
+				
+			}else {
+				test.log(LogStatus.FAIL, "No Error message Is Displayed When User Uploaded An Empty Excel");
+			}
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    public static void uploadExcel(String Taskname1,String dueDate1) {
+    	try {
+    		FillSampleExcel();   					
+			UploadSampleExcel();					  
+			/*TaskPage tp=new TaskPage(driver);
+			if(tp.TaskFailLog.isDisplayed()){			
+				test.log(LogStatus.FAIL,  " Reason Is Displayed Is"+tp.TaskFailLog.getText());			
+			}else {*/	
+				TaskPage tp=new TaskPage(driver);
+				Thread.sleep(2000);
+				TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate1);
+				Thread.sleep(2000);
+				if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname1)) {
+					test.log(LogStatus.PASS, "User was able to create new task successfully");	
+					Thread.sleep(2000);
+					WebDriverWait wait = new WebDriverWait(driver, 50);	
+					tp.DeleteTask.click();			
+					wait.until(ExpectedConditions.alertIsPresent());
+					driver.switchTo().alert().accept();
+					wait.until(ExpectedConditions.alertIsPresent());
+					driver.switchTo().alert().accept();
+				}else {
+					test.log(LogStatus.FAIL, "User was not able to create new task");	
+				}							
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
     
-    
-    
-    
-    
-    
+    public static void uploadExcelWithDifferentValue(String Value) {
+    	try {
+    		FillSampleExcel();  
+    		if(Value.equalsIgnoreCase("Account_name"))
+				ExcelReader.updateSampleExcel("data","Account_name","Mtestaccount");			
+			if(Value.equalsIgnoreCase("Service_engineer_number"))
+				ExcelReader.updateSampleExcel("data","Service_engineer_number",ExcelReader.ReadTestData("original_edit_profile_user_contact_num"));
+			if(Value.equalsIgnoreCase("Watcher"))
+				ExcelReader.updateSampleExcel("data","Watchers","Testbot");
+			UploadSampleExcel();
+			TaskPage tp=new TaskPage(driver);
+			if(tp.TaskFailLog.isDisplayed()) {
+				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When "+Value+" field in excel contains "+Value+" which is not already exixting on website");
+				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());
+				
+			}else {
+				test.log(LogStatus.FAIL, "No Error message Is Displayed When User Uploaded An Empty Excel");
+			}
+			  
+			
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }   
+    }
     
     
 }

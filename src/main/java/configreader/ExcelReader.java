@@ -28,8 +28,7 @@ public class ExcelReader {
 	
 	
 	public static String ReadTestData(String name) {
-		try {
-			
+		try {			
 				Sheet testDataSheet = ReadExcel(System.getProperty("user.dir")+"/src/test/resources/TestData/TestData.xlsx", "TestData");
 				int rowCount = testDataSheet.getLastRowNum();
 	            for(int i =1; i<=rowCount; i++) {
@@ -65,8 +64,8 @@ public class ExcelReader {
 		}
 	
 	public static void updateExcel(String filepath, String sheetName, int RowNo, int ColNo, String Value) throws Exception {
-		File excelFile =    new File(filepath);
-		try {
+		File excelFile =  new File(filepath);
+		try {			
 				FileInputStream inputStream = new FileInputStream(excelFile);
 				Workbook excelworkbook = null;
 				String fileExtensionName = filepath.substring(filepath.indexOf("."));
@@ -76,6 +75,7 @@ public class ExcelReader {
 					excelworkbook = new HSSFWorkbook(inputStream);
 				}
 				Sheet sheet = excelworkbook.getSheet(sheetName);
+				
 				try {
 				sheet.getRow(RowNo).getCell(ColNo).setCellValue(Value);
 				}catch(Exception e) {
@@ -191,5 +191,76 @@ public class ExcelReader {
 				e.printStackTrace();
 			}
 		}
+	
+	
+	public static void updateSampleExcel(String sheetName,String name, String Value) throws Exception {		
+		try {	
+			String filepath = System.getProperty("user.dir")+"/src/test/resources/TestData/task_sample.xlsx";
+			    File excelFile =  new File(filepath);
+				FileInputStream inputStream = new FileInputStream(excelFile);
+				Workbook excelworkbook = new XSSFWorkbook(inputStream);
+				
+				Sheet sheet = excelworkbook.getSheet(sheetName);			
+				int newnumber=1;
+				for(int i=0;i<=6;i++)
+				{
+					if(sheet.getRow(0).getCell(i).toString().equalsIgnoreCase(name)) {
+						newnumber=i;
+						System.out.println(i);
+						break;
+					}						
+				}
+				try {
+				sheet.getRow(1).getCell(newnumber).setCellValue(Value);
+				}catch(Exception e) {
+					System.out.println("Creating new cell");
+					sheet.getRow(1).createCell(newnumber).setCellValue(Value);
+				}
+				
+	            inputStream.close();
+	            FileOutputStream outputStream = new FileOutputStream(excelFile);
+	            excelworkbook.write(outputStream);
+	            outputStream.close();
+				 
+			} catch (Exception e) {
+				System.out.println("Unable to update Test Data file Please close the file, if open"+e.getMessage());
+				e.printStackTrace();
+			}
+		}
 
+	public static void updateTestDataExcel(String name, String Value) throws Exception {		
+		try {	
+			String filepath = System.getProperty("user.dir")+"/src/test/resources/TestData/TestData.xlsx";
+			    File excelFile =  new File(filepath);
+				FileInputStream inputStream = new FileInputStream(excelFile);
+				Workbook excelworkbook = new XSSFWorkbook(inputStream);			
+				Sheet sheet1 = excelworkbook.getSheet("TestData");			
+				int newnumber=1;
+				int rowCount = sheet1.getLastRowNum();
+	            for(int i =1; i<=rowCount; i++){
+					if(sheet1.getRow(i).getCell(0).toString().equalsIgnoreCase(name)) {
+						newnumber=i;
+						System.out.println(i);
+						break;
+					}						
+				}
+				try {
+				sheet1.getRow(newnumber).getCell(1).setCellValue(Value);
+				}catch(Exception e) {
+					System.out.println("Creating new cell");
+					sheet1.getRow(newnumber).createCell(1).setCellValue(Value);
+				}
+				
+	            inputStream.close();
+	            FileOutputStream outputStream = new FileOutputStream(excelFile);
+	            excelworkbook.write(outputStream);
+	            outputStream.close();
+				 
+			} catch (Exception e) {
+				System.out.println("Unable to update Test Data file Please close the file, if open"+e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+	
 }

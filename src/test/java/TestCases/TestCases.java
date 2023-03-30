@@ -43,12 +43,12 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test(enabled=true)
-	public static void Test_Login_With_Valid_Data_For_Existing_User() throws Exception {
+	public static void Test_Login_With_Valid_Data_For_Existing_User() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 	}
 	
 	@Test(enabled=true)
-	public static void Test_Login_With_Invalid_Data_For_Existing_User() throws Exception {
+	public static void Test_Login_With_Invalid_Data_For_Existing_User()  {
 		Stepdefination.VerifyInvalidLogin(ExcelReader.ReadTestData("invalid_email"),ExcelReader.ReadTestData("invalid_password"));
 		
 	}
@@ -129,14 +129,21 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void Error_message_Should_Be_Displayed_If_User_Enter_Wrong_Existing_Password_While_Reseting_Password() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.WrongExistingPassword("Test@123", "Test@abc");
+		Stepdefination.WrongExistingPassword(ExcelReader.ReadTestData("invalid_password"),ExcelReader.ReadTestData("reseted_password") );
 	}
 	
 	@Test(enabled=true)
 	public static void Test_If_Error_Message_Is_Displayed_When_New_Password_And_Confirm_Password_Are_Not_Matching() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.PasswordNotMatching("Test@123", "Test@abc","Test@ab");
+		Stepdefination.PasswordNotMatching(ExcelReader.ReadTestData("password"),ExcelReader.ReadTestData("invalid_password"),ExcelReader.ReadTestData("reseted_password"));
 	}
+	
+	@Test(enabled=true)
+	public static void Test_If_The_criteria_is_satisfied_If_User_Enter_a_password_which_met_the_requirement() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.PasswordMeetingCriteria();
+	}
+	
 	
 	@Test(enabled=true)
 	public static void Test_Is_ResetPassword_PopUp_Closing_After_Clicking_Close_Button() {
@@ -153,7 +160,7 @@ public class TestCases extends BaseTest {
 	@Test(enabled=true)
 	public static void Test_If_User_Is_Able_To_Logout_Of_Application_On_clicking_Logout_Button_On_SideBar() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.LogoutProfileIcon();
+		Stepdefination.LogoutSideBar();
 	}
 		
 	@Test(enabled=true)
@@ -302,7 +309,7 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test(enabled=true)//impr
-	public static void Verify_That_User_Is_Able_To_Select_More_Than_One_Macine() {
+	public static void Verify_That_User_Is_Able_To_Select_More_Than_One_Machine() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.VerifymultipleMachinesCanBeSelected(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),"Multiple");
 	}
@@ -344,6 +351,18 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test (enabled=true)
+	public static void Test_If_There_are_service_Engineer_availble_the_vendor_Should_be_Able_To_see_all_of_those_while_Creating_Task() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.preAvailbleServiceEingeer();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_There_are_Accounts_availble_the_vendor_Should_be_Able_To_see_all_of_those_while_Creating_Task() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.preAvailbleAccount();
+	}
+	
+	@Test (enabled=true)
 	public static void Verify_If_None_Button_Is_PreSelected_By_Default() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.NoneButtonIsSelectedByDefault();
@@ -365,6 +384,18 @@ public class TestCases extends BaseTest {
 	public static void Verify_On_selecting_Schedule_monthly_Button_Select_End_Date_Field_And_Select_month_DropDown_Should_Be_Displayed() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.selectScheduleMonthly(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_selecting_Schedule_monthly_Button_And_Selecting_Every_Month_All_Dates_Should_Be_Present() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.selectScheduleMonthlSelectmonth(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),true);
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_On_selecting_Schedule_monthly_Button_And_Selecting_Alternate_Month_All_Dates_Should_Be_Present() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.selectScheduleMonthlSelectmonth(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"),false);
 	}
 	
 	@Test (enabled=true)
@@ -391,4 +422,83 @@ public class TestCases extends BaseTest {
 		Stepdefination.uploadExcelDisplayed();
 	}
 	
+	@Test (enabled=true)
+	public static void Test_If_The_Upload_Excel_Button_Is_Disabled_If_No_File_Is_Uploded() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelIsDisabled();
+	}
+		
+	@Test (enabled=true)
+	public static void TEST_If_User_Is_Able_To_Reset_Password_And_login_With_New_Password() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.ResetPassword(ExcelReader.ReadTestData("email"), ExcelReader.ReadTestData("reseted_password"), "Dashboard");;
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_That_After_Selecting_A_machine_The_Selected_Name_Displayed_Is_Correct() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.VerifyMachineName();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_When_User_Upload_An_Empty_Excel() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadEmptyExcel();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Empty_Account_Feild_Uploded_Excel_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadMissingFeildExcel("account");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Empty_duedate_Feild_Uploded_Excel_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadMissingFeildExcel("duedate");
+	}
+	@Test (enabled=true)
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Empty_Taskname_Feild_Uploded_Excel_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadMissingFeildExcel("TaskName");
+	}
+	@Test (enabled=true)
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Empty_Machine_Code_Feild_Uploded_Excel_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadMissingFeildExcel("machinecode");
+	}
+	@Test (enabled=true)
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Empty_Service_engineer_number_Feild_Uploded_Excel_File() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadMissingFeildExcel("serviceengineerphone");
+	}
+	@Test (enabled=true)/////////////////////////
+	public static void Test_If_Error_Message_Is_Dispalyed_In_Case_Of_A_Past_Due_Date() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		//Stepdefination.uploadExcel("account");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_User_Is_Able_To_Create_A_Task_By_Uploading_Excel_In_The_Given_Format() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcel(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("duedate"));
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_If_Uploaded_Excel_Contains_Account_Name_Which_is_Not_On_Present_Website() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelWithDifferentValue("Account_name");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_If_Uploaded_Excel_Contains_Watcher_Which_is_Not_On_Present_Website() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelWithDifferentValue("Watcher");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_If_Uploaded_Excel_Contains_Service_engineer_number_Which_is_Not_On_Present_Website() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelWithDifferentValue("Service_engineer_number");
+	}
 }

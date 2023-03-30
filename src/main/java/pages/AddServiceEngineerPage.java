@@ -20,4 +20,8 @@ public class AddServiceEngineerPage extends PageBase {
 	@CacheLookup
 	public List<WebElement> AllSeviceEngineersNames;
 
+	@FindBy(xpath = "//*[@id='reRenderSer']/tr/td[2]")
+	@CacheLookup
+	public List<WebElement> AllSeviceEngineersPhone;
+	
 }

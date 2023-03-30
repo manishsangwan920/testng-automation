@@ -30,16 +30,18 @@ public class DropDownHelper {
 		}
 	}
 	
-     public static void selectRandomElementFromDivList(List<WebElement> dropdown, String name,int StartIndex) {
+     public static int selectRandomElementFromDivList(List<WebElement> dropdown, String name,int StartIndex) {
     	 try {
 	        List<WebElement> itemsInDropdown = dropdown;
 	    	int size = itemsInDropdown.size();
-	    	int randomNumber = ThreadLocalRandom.current().nextInt(StartIndex,size);	
+	    	int randomNumber = ThreadLocalRandom.current().nextInt(StartIndex,size-1);	
 	    	itemsInDropdown.get(randomNumber).click();
 	    	ObjectRepo.test.log(LogStatus.INFO, name+" Is Selected From Drodown List");
+	    	return randomNumber;
  		}catch(Exception e) {
  			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select "+name+" From DropDown list");
  			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+ 			return 0;
  		} 	 
      }
      
@@ -123,4 +125,42 @@ public class DropDownHelper {
  			return 0;
  		}
  	}
+     
+     public static int SizeOfDivList(List<WebElement> List) {
+    	 try {
+	      return List.size(); 
+ 		}catch(Exception e) {
+ 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to get size of DropDown list");
+ 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+ 			return 0;
+ 		} 	 
+     }
+     
+     public static String selectRandomElementFromDivListAndGetText(List<WebElement> List, String name,int StartIndex) {
+    	 try {        
+	    	int size = List.size();
+	    	int randomNumber = ThreadLocalRandom.current().nextInt(StartIndex,size-1);
+	    	String text=List.get(randomNumber).getText();
+	    	List.get(randomNumber).click();
+	    	ObjectRepo.test.log(LogStatus.INFO, name+" Is Selected From Drodown List");
+	    	return text;
+ 		}catch(Exception e) {
+ 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select "+name+" From DropDown list");
+ 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+ 			return null;
+ 		} 	 
+     }
+     public static String selectElementByIndexFromDivListGetText(List<WebElement> dropdown, String name,int index) {
+    	 try {
+	        List<WebElement> itemsInDropdown = dropdown;
+	        String text=itemsInDropdown.get(index).getText();
+	    	itemsInDropdown.get(index).click();
+	    	ObjectRepo.test.log(LogStatus.INFO, name+" Is Selected From Drodown List");
+	    	return text;
+ 		}catch(Exception e) {
+ 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select "+name+" From DropDown list");
+ 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+ 			return null;
+ 		} 	 
+     }
 }

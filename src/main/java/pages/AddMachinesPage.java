@@ -15,8 +15,11 @@ public class AddMachinesPage extends PageBase {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@FindBy(xpath = "//*[@id='reRenderMachines']/tr/td[contains(text(),'sainath')]")
+	@FindBy(xpath = "//*[@id=\"reRenderMachines\"]/tr/td[1]")
 	@CacheLookup
-	public List<WebElement> NumberSeviceEngineersNames;
-
+	public List<WebElement> AccountNames;
+	
+	@FindBy(xpath = "//*[@id=\"reRenderMachines\"]/tr/td[3]")
+	@CacheLookup
+	public List<WebElement> MachineUniqueCode;
 }

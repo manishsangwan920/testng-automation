@@ -18,10 +18,9 @@ import com.relevantcodes.extentreports.LogStatus;
 
 public class TextBoxHelper {
 	
-	public static void enterText(WebElement textbox, String Name, String Value){
+	public static void enterTextString(WebElement textbox, String Name, String Value){
 		try {
-			textbox.sendKeys(Keys.CONTROL + "a");
-			textbox.sendKeys(Keys.DELETE);
+			textbox.clear();			
 			textbox.sendKeys(Value);
 			ObjectRepo.test.log(LogStatus.INFO, Value+" entered in textbox "+Name);
 			
@@ -31,6 +30,8 @@ public class TextBoxHelper {
 		}
 		
 	}
+	
+	
 	
 	public static void validateTextBoxValue(WebElement textbox, String Name, String Value) throws Exception {
 		try {

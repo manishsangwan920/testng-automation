@@ -27,6 +27,7 @@ public class LoginPage extends PageBase {
 	@CacheLookup
 	public  WebElement emailTextBox;
 	
+	
 	@FindBy(id = "pwd")
 	@CacheLookup
 	public  WebElement passwordTextBox;
