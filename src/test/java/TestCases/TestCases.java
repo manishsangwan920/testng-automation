@@ -501,4 +501,52 @@ public class TestCases extends BaseTest {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.uploadExcelWithDifferentValue("Service_engineer_number");
 	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_If_Uploaded_Excel_Contains_Same_Service_engineer_And_Watcher() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.SameServiceEngineer();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_An_Error_Message_Is_Displayed_If_Uploaded_Excel_Contains_Due_date_As_A_Past_Date() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkDueDate();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_For_A_Monthly_Repeating_Task_The_end_Date_Should_Be_Of_current_or_Future_Quater_Only() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDate("monthly");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_For_A_weekly_Repeating_Task_The_end_Date_Should_Be_Of_current_or_Future_Quater_Only() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDate("weekly");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_For_A_Daily_Repeating_Task_The_end_Date_Should_Be_Of_current_or_Future_Quater_Only() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDate("Daily");
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_ALL_The_Feilds_After_creating_The_Task_Have_correct_Values_when_Created_From_Excel() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.uploadExcelVerifyFeilds(ExcelReader.ReadTestData("duedate"));
+	}
+	
+	@Test (enabled=true)
+	public static void Verify_ALL_The_Feilds_After_creating_The_Task_Have_correct_Values() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.CreatTaskVerifyFeilds();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_Just_After_Creating_A_Task_The_Status_of_task_should_be_Incomplete() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyTaskStatus();
+	}
 }

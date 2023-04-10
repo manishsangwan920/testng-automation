@@ -6,7 +6,7 @@ import configreader.ExcelReader;
 
 import static settings.ObjectRepo.test;
 
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.datatransfer.Clipboard;
@@ -29,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -1819,9 +1821,9 @@ public class Stepdefination {
     public static void uploadEmptyExcel() {
     	try {   		
 			ExcelReader.updateSampleExcel("data","Account_name","");
+			ExcelReader.updateSampleExcel("data","Service_engineer_number","");	
 			ExcelReader.updateSampleExcel("data","Machine_unique_code","");						
-			ExcelReader.updateSampleExcel("data","Watchers","");		
-			ExcelReader.updateSampleExcel("data","Service_engineer_number","");			
+			ExcelReader.updateSampleExcel("data","Watchers","");							
 			ExcelReader.updateSampleExcel("data","Description","");
 			ExcelReader.updateSampleExcel("data","Task_name","");									
 			ExcelReader.updateSampleExcel("data","Due_date","");
@@ -1839,14 +1841,12 @@ public class Stepdefination {
 	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 	    }
     }
+    
     public static void uploadExcel(String Taskname1,String dueDate1) {
     	try {
     		FillSampleExcel();   					
 			UploadSampleExcel();					  
-			/*TaskPage tp=new TaskPage(driver);
-			if(tp.TaskFailLog.isDisplayed()){			
-				test.log(LogStatus.FAIL,  " Reason Is Displayed Is"+tp.TaskFailLog.getText());			
-			}else {*/	
+				
 				TaskPage tp=new TaskPage(driver);
 				Thread.sleep(2000);
 				TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate1);
@@ -1882,18 +1882,256 @@ public class Stepdefination {
 			TaskPage tp=new TaskPage(driver);
 			if(tp.TaskFailLog.isDisplayed()) {
 				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When "+Value+" field in excel contains "+Value+" which is not already exixting on website");
-				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());
-				
+				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());				
 			}else {
 				test.log(LogStatus.FAIL, "No Error message Is Displayed When User Uploaded An Empty Excel");
 			}
-			  
-			
+			  			
     	}catch(Exception e){
 	    	e.printStackTrace();
 	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 	    }   
     }
     
+ 
+    public static void SameServiceEngineer() {
+    	try {
+    		FillSampleExcel();  
+    		HomePageSideBar hps = new HomePageSideBar(driver);	
+			AddServiceEngineerPage se = new AddServiceEngineerPage(driver);
+			ButtonHelper.click(hps.serviceEngineersWatcher, "Service Engineers/Watcher Button on sidebar");
+    		int num1 =ThreadLocalRandom.current().nextInt(0,se.AllSeviceEngineersNames.size());
+			String elementText1=se.AllSeviceEngineersNames.get(num1).getText();
+			ExcelReader.updateSampleExcel("data","Watchers",elementText1);
+			String elementText2=se.AllSeviceEngineersPhone.get(num1).getText();
+			ExcelReader.updateSampleExcel("data","Service_engineer_number",elementText2);	
+			UploadSampleExcel();
+			TaskPage tp=new TaskPage(driver);
+			if(tp.TaskFailLog.isDisplayed()) {
+				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When User Upload Excel which Has Same Service Engineer And Watcher");
+				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());				
+			}else {
+				test.log(LogStatus.FAIL, "Error Message With Reason Is Displayed When User Upload Excel which Has Same Service Engineer And Watcher");
+			}
+			  			
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }   
+    }
+    public static void checkDueDate() {
+    	try {
+    		FillSampleExcel();  
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");  
+			LocalDateTime now = LocalDateTime.now(); 
+			LocalDateTime Pastdate = now.plusDays(-4);
+			ExcelReader.updateSampleExcel("data","Due_date",dtf.format(Pastdate));
+			UploadSampleExcel();
+			TaskPage tp=new TaskPage(driver);
+			if(tp.TaskFailLog.isDisplayed()) {
+				test.log(LogStatus.PASS,  "Error Message With Reason Is Displayed When User Upload Excel with past date");
+				test.log(LogStatus.INFO,  " Reason Displayed Is : "+tp.TaskFailLog.getText());				
+			}else {
+				test.log(LogStatus.FAIL, "Error Message With Reason Is Displayed When User Upload Excel which Has dueDate as past date ");
+			}
+			  			
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }   
+    }
     
+    public static void checkEndDate(String schedule) {
+    	try {   
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			if(schedule.equalsIgnoreCase("monthly"))
+			 ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule Monthly Button");
+			if(schedule.equalsIgnoreCase("weekly"))
+				 ButtonHelper.click(tp.ScheduleWeeklyBtn, "Schedule weekly Button");
+			else
+				 ButtonHelper.click(tp.ScheduleDailyBtn, "Schedule Daily Button");
+			boolean check=true;			 
+			for(int i=1;i<=DropDownHelper.sizeOfSelect(tp.MonthlytaskRepeatEndDate,"Monthly task Repeat EndDate");i++) {
+				String startDate=null;
+				if(schedule.equalsIgnoreCase("monthly"))
+					startDate=DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", i-1);
+				if(schedule.equalsIgnoreCase("weekly"))
+					 startDate=DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", i-1);
+				else
+					 startDate=DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", i-1);
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+				Date start = sdf.parse(startDate);
+				LocalDateTime now = LocalDateTime.now(); 						
+				String endDate = dtf.format(now);
+				Date end = sdf.parse(endDate);
+				if(start.before(end)) {
+					check=false;
+					break;
+				}				
+			}
+			if(check)
+				test.log(LogStatus.PASS,  "Only Present And Future Quater Dates Are Present For Selection As The End Date Of A Repeating Task");
+			else
+				test.log(LogStatus.FAIL,  "Past Quater Date Is Present For Selection As The End Date Of A Repeating Task");
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }  
+    	
+    }
+    
+    public static void uploadExcelVerifyFeilds(String dueDate1) {
+    	try {
+    		FillSampleExcel();   					
+			UploadSampleExcel();
+			Thread.sleep(4000);	
+			HomePageSideBar hps=new HomePageSideBar(driver);
+			hps.serviceEngineersWatcher.click();
+			Thread.sleep(4000);
+			AddServiceEngineerPage se = new AddServiceEngineerPage(driver);
+			System.out.println(se.AllSeviceEngineersPhone.get(1).getText());
+			System.out.println(ExcelReader.ReadSampleExcel("data","Service_engineer_number"));
+			int num=DropDownHelper.findIndexOfTextElement(se.AllSeviceEngineersPhone,ExcelReader.ReadSampleExcel("data","Service_engineer_number"));
+			String engineername=se.AllSeviceEngineersNames.get(num).getText();
+			System.out.println(engineername);
+			hps.Tasks.click();
+			TaskPage tp=new TaskPage(driver);
+			Thread.sleep(4000);
+			TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate1);	
+			Thread.sleep(8000);
+			if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
+				test.log(LogStatus.PASS, "Task name present on application after creating a task is same as in uploaded excel");	
+				if(tp.verifyServiceEngineerName.getText().equalsIgnoreCase(engineername))
+					test.log(LogStatus.PASS, "Service engineer name present on application after creating a task is same as in uploaded excel");
+				else
+					test.log(LogStatus.FAIL, "Service engineer name present on application after creating a task is not same as in uploaded excel");
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String startDate = tp.verifyDueDate.getText();
+				String endDate = ExcelReader.ReadSampleExcel("data","Due_date");
+				Date start = sdf.parse(startDate);			
+				Date end = sdf.parse(endDate);
+				if(start.equals(end))
+					test.log(LogStatus.PASS, "Due Date present on application after creating a task is same as in uploaded excel");
+				else
+					test.log(LogStatus.FAIL, "Due Date present on application after creating a task is not same as in uploaded excel");
+				if(tp.verifyAccountName.getText().equalsIgnoreCase(ExcelReader.ReadSampleExcel("data","Account_name")))
+					test.log(LogStatus.PASS, "Account name present on application after creating a task is same as in uploaded excel");
+				else
+					test.log(LogStatus.FAIL, "Account name present on application after creating a task is not same as in uploaded excel");
+				if(tp.VerifyTaskStatus.isDisplayed())
+					test.log(LogStatus.PASS, "Task status is displayed");
+				else 
+					test.log(LogStatus.FAIL, "Task status is not displayed");
+				if(tp.addComment.isEnabled())
+					test.log(LogStatus.PASS, "Add comment button is displayed");
+				else
+					test.log(LogStatus.FAIL, "Add comment button is not displayed");
+				WebDriverWait wait = new WebDriverWait(driver, 50);	
+				tp.DeleteTask.click();			
+				wait.until(ExpectedConditions.alertIsPresent());
+				driver.switchTo().alert().accept();
+				wait.until(ExpectedConditions.alertIsPresent());
+				driver.switchTo().alert().accept();
+			}else {
+					test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}							
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    public static void CreatTaskVerifyFeilds() {
+    	try {
+    		 BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+    		 TaskPage tp1=new TaskPage(driver);
+    		 String Text1=DropDownHelper.selectRandomElementByIndexAndGetText(tp1.ServiceEngineer,"service engineer");
+    		 String Text2=DropDownHelper.selectRandomElementByIndexAndGetText(tp1.SelectedAccount,"Account");
+    		 ButtonHelper.click(tp1.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
+			 wait.until(ExpectedConditions.alertIsPresent());
+			 driver.switchTo().alert().accept();
+			 Thread.sleep(4000);
+			 driver.navigate().refresh();
+			 Thread.sleep(4000);
+			 TaskPage tp=new TaskPage(driver);
+ 			 TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date",ExcelReader.ReadTestData("duedate") );
+ 			 Thread.sleep(4000);
+ 			 if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
+ 				test.log(LogStatus.PASS, "Task name present on application after creating a task is same as by entered user");	
+ 				if(tp.verifyServiceEngineerName.getText().equalsIgnoreCase(Text1))
+ 					test.log(LogStatus.PASS, "Service engineer name present on application after creating a task is same as by entered user");
+ 				else
+ 					test.log(LogStatus.FAIL, "Service engineer name present on application after creating a task is not same as entered by user");
+ 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+ 				String startDate = tp.verifyDueDate.getText();
+ 				String endDate = ExcelReader.ReadTestData("duedate");
+ 				Date start = sdf.parse(startDate);			
+ 				Date end = sdf.parse(endDate);
+ 				if(start.equals(end))
+ 					test.log(LogStatus.PASS, "Due Date present on application after creating a task is same as entered by user");
+ 				else
+ 					test.log(LogStatus.FAIL, "Due Date present on application after creating a task is not same as entered by user");
+ 				if(tp.verifyAccountName.getText().equalsIgnoreCase(Text2))
+ 					test.log(LogStatus.PASS, "Account name present on application after creating a task is same as entered by user");
+ 				else
+ 					test.log(LogStatus.FAIL, "Account name present on application after creating a task is not same as entered by user");
+ 				if(tp.VerifyTaskStatus.isDisplayed())
+ 					test.log(LogStatus.PASS, "Task status is displayed");
+ 				else 
+ 					test.log(LogStatus.FAIL, "Task status is not displayed");
+ 				if(tp.addComment.isEnabled())
+ 					test.log(LogStatus.PASS, "Add comment button is displayed");
+ 				else
+ 					test.log(LogStatus.FAIL, "Add comment button is not displayed");	
+ 				tp.DeleteTask.click();			
+ 				wait.until(ExpectedConditions.alertIsPresent());
+ 				driver.switchTo().alert().accept();
+ 				wait.until(ExpectedConditions.alertIsPresent());
+ 				driver.switchTo().alert().accept();
+ 			}else {
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+ 			}	
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    public static void verifyTaskStatus() {
+    	try {
+    		BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+    		 TaskPage tp1=new TaskPage(driver);
+    		 ButtonHelper.click(tp1.SaveCreatedTask, "Save button");
+			 WebDriverWait wait = new WebDriverWait(driver, 50);
+			 wait.until(ExpectedConditions.alertIsPresent());
+			 driver.switchTo().alert().accept();
+			 Thread.sleep(4000);
+			 driver.navigate().refresh();
+			 Thread.sleep(4000);
+			 TaskPage tp=new TaskPage(driver);
+ 			 TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date",ExcelReader.ReadTestData("duedate") );
+ 			 Thread.sleep(4000);
+ 			 if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
+ 				 test.log(LogStatus.PASS, "User Was Able To Create Task Successfully");
+ 				 if(tp.VerifyTaskStatus.getText().equalsIgnoreCase("incomplete"))
+ 					 test.log(LogStatus.PASS, "Task status displayed is "+tp.VerifyTaskStatus.getText());
+ 				 else 
+ 					 test.log(LogStatus.FAIL, "Task status displayed is "+tp.VerifyTaskStatus.getText());
+ 				 tp.DeleteTask.click();			
+ 				 wait.until(ExpectedConditions.alertIsPresent());
+ 				 driver.switchTo().alert().accept();
+ 				 wait.until(ExpectedConditions.alertIsPresent());
+ 				 driver.switchTo().alert().accept();
+			}else{
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}	
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
 }

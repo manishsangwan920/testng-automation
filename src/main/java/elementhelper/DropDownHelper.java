@@ -163,4 +163,22 @@ public class DropDownHelper {
  			return null;
  		} 	 
      }
+     
+     public static int findIndexOfTextElement(List<WebElement> dropdown, String name) {
+    	 try {
+    		 List<WebElement> itemsInDropdown = dropdown;
+    		 int size=itemsInDropdown.size();
+    		 for(int i=0;i<=size;i++) {
+    			 dropdown.get(i).getText();
+    			 if(name.equalsIgnoreCase(dropdown.get(i).getText())) {
+    				 return i;
+    			 }   		 
+    		 }
+    		 return 0;		 
+ 		}catch(Exception e) {
+ 			ObjectRepo.test.log(LogStatus.FAIL, "Unable to find "+name+"in DropDown list");
+ 			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+ 			return 0;
+ 		} 	
+     }
 }

@@ -44,6 +44,23 @@ public class ExcelReader {
 		}
 	}
 	
+	public static String ReadSampleExcel(String SheetName,String elementName) {
+		try {			
+				Sheet testDataSheet = ReadExcel(System.getProperty("user.dir")+"/src/test/resources/TestData/task_sample.xlsx", SheetName);
+				
+	            for(int i=0; i<=6; i++) {
+	            	if(testDataSheet.getRow(0).getCell(i).toString().equals(elementName)) {
+	            		return testDataSheet.getRow(1).getCell(i).toString();
+	            	}
+	            }
+	            return null;
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println( "Unable to read sample Data sheet");
+			return null;
+		}
+	}
+	
 	public static Sheet ReadExcel(String filepath, String sheetName) throws Exception {
 		File excelFile = new File(filepath);
 		try {
@@ -95,7 +112,7 @@ public class ExcelReader {
 		}
 	
 	public static int searchExcel(String filepath, String sheetName, int col, String Value) throws Exception {
-		File excelFile =    new File(filepath);
+		File excelFile = new File(filepath);
 		try {
 			FileInputStream inputStream = new FileInputStream(excelFile);
 			Workbook excelworkbook = null;
@@ -205,8 +222,7 @@ public class ExcelReader {
 				for(int i=0;i<=6;i++)
 				{
 					if(sheet.getRow(0).getCell(i).toString().equalsIgnoreCase(name)) {
-						newnumber=i;
-						System.out.println(i);
+						newnumber=i;						
 						break;
 					}						
 				}

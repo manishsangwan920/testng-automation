@@ -170,14 +170,43 @@ public class TaskPage extends PageBase {
 	@CacheLookup
 	public  WebElement verifyTaskName;
 	
+	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[2]")
+	@CacheLookup
+	public  WebElement verifyAccountName;
+	
+	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[3]")
+	@CacheLookup
+	public  WebElement verifyServiceEngineerName;
+	
+	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[4]")
+	@CacheLookup
+	public  WebElement verifyDueDate;
+	
+	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[5]")
+	@CacheLookup
+	public  WebElement VerifyTaskStatus;
+	
+	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[6]/button")
+	@CacheLookup
+	public  WebElement addComment;
+	
+	@FindBy(xpath = "//*[@id=\"commentsBox321\"]/dIV[1]/P[2]")
+	@CacheLookup
+	public  WebElement VerifyComment;
+	
+	@FindBy(id = "comment")
+	@CacheLookup
+	public List<WebElement> writeComment;
+		
 	@FindBy(xpath = "//*[@id=\"reRender\"]/tr[1]/td[7]/button[3]")
 	@CacheLookup
 	public  WebElement DeleteTask;
 	
+	
+	
 	@FindBy(xpath = "//*[@id='Instruction_Task_Excel']/div/div/div/button[@class='close']")
 	@CacheLookup
-	public  WebElement CloseDownloadExcel;
-	
+	public  WebElement CloseDownloadExcel;	
 	
 	@FindBy(xpath = "//a[@target='_blank']/img")
 	@CacheLookup
