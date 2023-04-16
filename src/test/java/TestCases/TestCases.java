@@ -34,7 +34,7 @@ import stepdefination.Stepdefination;
 *
 ********************************************************************************************************/
 
-
+//close testdata.xlsx and task_sample.xlsx before executing test cases;
 public class TestCases extends BaseTest {
 	
 	@Test(enabled=true)
@@ -123,7 +123,7 @@ public class TestCases extends BaseTest {
 	@Test (enabled=true)
 	public static void Test_User_Profile_Data_Is_Editable_And_When_Updated_Changes_Are_Visible_Dashboard() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
-		Stepdefination.editUserProfile(ExcelReader.ReadTestData("edit_profile_user_name"),ExcelReader.ReadTestData("edit_profile_user_contact_num"),ExcelReader.ReadTestData("edit_profile_company_name"));
+		Stepdefination.editUserProfile(ExcelReader.ReadTestData("test_edit_profile_company_name"),ExcelReader.ReadTestData("test_edit_profile_user_name"),ExcelReader.ReadTestData("test_edit_profile_user_contact_num "));
 	}
 	
 	@Test(enabled=true)
@@ -218,7 +218,7 @@ public class TestCases extends BaseTest {
 		Stepdefination.createTaskPopUp();
 	}
 	@Test (enabled=true)
-	public static void Test_User_is_Able_To_Create_New_Task() {
+	public static void Test_If_User_is_Able_To_Create_New_Task() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.CreateTask(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
 	}
@@ -428,7 +428,7 @@ public class TestCases extends BaseTest {
 		Stepdefination.uploadExcelIsDisabled();
 	}
 		
-	@Test (enabled=true)
+	@Test (enabled=false)
 	public static void TEST_If_User_Is_Able_To_Reset_Password_And_login_With_New_Password() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.ResetPassword(ExcelReader.ReadTestData("email"), ExcelReader.ReadTestData("reseted_password"), "Dashboard");;
@@ -533,6 +533,24 @@ public class TestCases extends BaseTest {
 	}
 	
 	@Test (enabled=true)
+	public static void Test_If_End_Dates_For_An_monthly_Repeating_Task_Are_Quaterly_Basis() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDateAreQuaterBasis("monthly");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_End_Dates_For_An_weekly_Repeating_Task_Are_Quaterly_Basis() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDateAreQuaterBasis("weekly");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_End_Dates_For_An_Daily_Repeating_Task_Are_Quaterly_Basis() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.checkEndDateAreQuaterBasis("Daily");
+	}
+	
+	@Test (enabled=true)
 	public static void Verify_ALL_The_Feilds_After_creating_The_Task_Have_correct_Values_when_Created_From_Excel() {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.uploadExcelVerifyFeilds(ExcelReader.ReadTestData("duedate"));
@@ -549,4 +567,66 @@ public class TestCases extends BaseTest {
 		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
 		Stepdefination.verifyTaskStatus();
 	}
+	
+	@Test (enabled=true)
+	public static void Test_If_User_Is_Able_Add_Comment_To_A_Task() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.AddComment();
+	}
+	
+	
+	@Test (enabled=true)
+	public static void verify_Confirmation_ALert_Is_Showing_after_Deleting_Task() {
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyalertafetDeletingTask();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_User_Is_Able_Delete_A_Task_Which_Is_Not_Started_Or_completed_By_Engineer(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyDeletingTask();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_Download_Task_Button_iS_Displayed_If_Task_Status_Is_Incomplete(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyDownloadTaskButton("incomplete",null);
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_User_Is_Able_Download_Task_If_Status_Of_Task_Is_complete(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyDownloadTaskButton("complete","abc");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_User_Is_Able_Download_Task_If_Status_Of_Task_Is_complete_It_opens_In_a_New_Tab(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.verifyDownloadTaskButton("complete","checkwindow");
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_After_Clicking_edit_Task_Button_edit_task_Popup_Is_Opening(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.EditTaskpopdisplayed();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_After_Clicking_edit_Task_button_Is_disabled_for_incomplete_and_overdue_task(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.EditTaskenabled();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_All_the_Feilds_except_Schedule_Are_editable(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.EditTaskpopFeilds();
+	}
+	
+	@Test (enabled=true)
+	public static void Test_If_After_Clicking_close_Button_edit_task_Popup_Is_closing(){
+		Stepdefination.LoginApplication(ExcelReader.ReadTestData("email"),ExcelReader.ReadTestData("password"),"Dashboard");
+		Stepdefination.EditTaskpopCloses();
+	}
+	
 }

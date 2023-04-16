@@ -57,6 +57,18 @@ public class DropDownHelper {
  		}
  	}
      
+     public static void selectElementByvalue(WebElement dropdown,String Name,String Elementvalue) {
+  		try {
+  			Thread.sleep(3000);			
+  			Select dropbutton =new Select(dropdown);
+  			dropbutton.selectByValue(Elementvalue);					
+  			ObjectRepo.test.log(LogStatus.INFO, Elementvalue+" Is Selected From Drodown List"+Name);
+  		}catch(Exception e) {
+  			ObjectRepo.test.log(LogStatus.FAIL, "Unable to Select Element From DropDown list "+Name);
+  			ExtentReportHelper.logFailWithScreenshot(e.getMessage());
+  		}
+  	}
+     
      public static void deselectElementByIndex(WebElement dropdown,String Name,int index) {
   		try {
   			Thread.sleep(3000);			

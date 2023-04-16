@@ -6,11 +6,13 @@ import configreader.ExcelReader;
 
 import static settings.ObjectRepo.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +32,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -342,7 +346,8 @@ public class Stepdefination {
 			ButtonHelper.click(pp.savePicture, "Save Picture");
 			Thread.sleep(3000);
 			String chromeMessage = driver.switchTo().alert().getText();
-			driver.switchTo().alert().accept();			
+			driver.switchTo().alert().accept();	
+			Thread.sleep(2000);
 			  if(pp.profilePicture.isDisplayed()&&chromeMessage.equalsIgnoreCase("user profile picture is successfully updated."))
 				  test.log(LogStatus.PASS, "Profile Picture was uploaded and saved successfully");
 		         else
@@ -456,12 +461,12 @@ public class Stepdefination {
 		    ButtonHelper.click(sb.dashboardSideBar,"Dashbaord on Sidebar tab");
 		    if(hp.companyName.getText().equals(companyname))
 				test.log(LogStatus.PASS, "Edited Company name is displayed on Header of HomePage");
-		        else
-		        	test.log(LogStatus.FAIL, "Edited company name is not present on header of home page");
+		    else
+		       	test.log(LogStatus.FAIL, "Edited company name is not present on header of home page");
 		    if(hp.distributersName.getText().equals(name))
 		    	test.log(LogStatus.PASS, "Edited user name is displayed on Dashboard");
-	        	else
-	        		test.log(LogStatus.FAIL, "Edited user name is not present");
+	        else
+	        	test.log(LogStatus.FAIL, "Edited user name is not present");
 		    Thread.sleep(3000);
 		    hp = new HomePage(driver);
 		    hp.profileIcon.click();
@@ -478,6 +483,7 @@ public class Stepdefination {
 		   pp.editProfileSave.click();
 		   Thread.sleep(2000);
 		   driver.switchTo().alert().accept();
+		   sb =new HomePageSideBar(driver);
 		   ButtonHelper.click(sb.dashboardSideBar,"Dashbaord on Sidebar tab");
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -869,8 +875,10 @@ public class Stepdefination {
 		}
 	}
 	
-	public static void CreateTask(String Taskname, String Description,String dueDate) {
-		try {  
+	
+	
+	public static void BasicCreateTaskHalfHelper(String Taskname, String Description,String dueDate) {
+    	try {  
 			HomePageSideBar hps = new HomePageSideBar(driver);	
 			TaskPage tp=new TaskPage(driver);
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
@@ -884,30 +892,72 @@ public class Stepdefination {
 			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
 			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 			Thread.sleep(2000);
-			try {
-				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
-				driver.switchTo().alert().accept();
-				tp=new TaskPage(driver);							
-				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+			for(int i=0;i<=5;i++) {
+				try {
+					if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
+					driver.switchTo().alert().accept();
+					tp=new TaskPage(driver);							
+					DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
+					}
+				}catch(NoAlertPresentException e) {	
+					break;
 				}
-			}catch(NoAlertPresentException e) {				
 			}
 			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+    	}catch(Exception e) {
+			e.printStackTrace();
+			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		}
+    	
+    }
+	
+	 public static void SaveTaskAndApplyFilter(){ 
+	    	try {
+		    	 TaskPage tp1=new TaskPage(driver);
+				 ButtonHelper.click(tp1.SaveCreatedTask, "Save button");
+				 WebDriverWait wait = new WebDriverWait(driver, 50);
+				 wait.until(ExpectedConditions.alertIsPresent());
+				 driver.switchTo().alert().accept();
+				 Thread.sleep(10000);
+				 driver.navigate().refresh();
+				 TaskPage tp2=new TaskPage(driver);
+				 Thread.sleep(5000);
+				 TextBoxHelper.enterTextString(tp2.DateFilter, "Filter Date",ExcelReader.ReadTestData("duedate") );
+				 Thread.sleep(5000);
+	    	}catch(Exception e) {
+		    	e.printStackTrace();
+		    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		    }
+	    }
+	 
+	    public static void DeleteTaskWithoutMessage() {
+	    	try {
+	    		 TaskPage tp=new TaskPage(driver);
+	    		 tp.DeleteTask.click();
+	    		 Thread.sleep(5000);
+	    		 WebDriverWait wait = new WebDriverWait(driver, 50);
+				 wait.until(ExpectedConditions.alertIsPresent());
+				 driver.switchTo().alert().accept();
+				 wait.until(ExpectedConditions.alertIsPresent());
+				 driver.switchTo().alert().accept();
+	    	}catch(Exception e) {
+		    	e.printStackTrace();
+		    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+		    }
+	    }
+	
+	public static void CreateTask(String Taskname, String Description,String dueDate) {
+		try {  
+			 BasicCreateTaskHalfHelper(Taskname,Description,dueDate);
+			 SaveTaskAndApplyFilter();
+			 TaskPage tp=new TaskPage(driver);
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}
@@ -932,6 +982,7 @@ public class Stepdefination {
 				ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
 				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 				Thread.sleep(2000);
+				for(int i=1;i<=5;i++) {				
 				try {
 					if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
 					driver.switchTo().alert().accept();
@@ -939,7 +990,9 @@ public class Stepdefination {
 					Thread.sleep(2000);								
 					DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
 					}
-				}catch(NoAlertPresentException e) {				
+				}catch(NoAlertPresentException e) {	
+					break;
+				}
 				}
 			}
 			if(fieldname!="SelectedAccount")
@@ -953,27 +1006,19 @@ public class Stepdefination {
 				DropDownHelper.selectElementByIndexFromDivList(tp.MachineList,"Machines",1);
 			}				
 			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
-			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");		
+			String screenshotPath = ExtentReportHelper.getScreenshot();
+			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
+			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");	
+			
 			ButtonHelper.click(tp.SaveCreatedTask, "Save button");					
 			WebDriverWait wait = new WebDriverWait(driver, 50);
 		 	  wait.until(ExpectedConditions.alertIsPresent());
 			  String msg = driver.switchTo().alert().getText();
-			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("Task name required"))				
+			if(msg.equalsIgnoreCase("This service engineer does not exist.")||msg.equalsIgnoreCase("Due date should be greater than current date.")||msg.equalsIgnoreCase("Task name required")||msg.equalsIgnoreCase("This account does not exist."))				
 				test.log(LogStatus.PASS, "error message '"+msg+ "' was displayed when user missed a mandatory field while creating task");
 		    else			
 				test.log(LogStatus.FAIL, "No error message was displayed when user missed a mandatory field while creating task");
 			driver.switchTo().alert().accept();
-			tp=new TaskPage(driver);
-			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
-				test.log(LogStatus.FAIL, "User was able to create new task even though a mandatory field was not selected");
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-			}
-			else
-				test.log(LogStatus.PASS, "User was not able to create new task Without selecting all the mandatory fields");	
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -1133,40 +1178,7 @@ public class Stepdefination {
 		}
 	}
     
-    public static void BasicCreateTaskHalfHelper(String Taskname, String Description,String dueDate) {
-    	try {  
-			HomePageSideBar hps = new HomePageSideBar(driver);	
-			TaskPage tp=new TaskPage(driver);
-			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
-			ButtonHelper.click(tp.createTask, "Create task button");
-			Thread.sleep(4000);
-			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
-			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
-			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);		
-			tp=new TaskPage(driver);
-			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
-			Thread.sleep(2000);
-			try {
-				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
-				driver.switchTo().alert().accept();
-				tp=new TaskPage(driver);							
-				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
-				}
-			}catch(NoAlertPresentException e) {				
-			}
-			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
-			DropDownHelper.selectRandomElementByIndex(tp.TaskType,"Task Type");
-			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
-			String screenshotPath = ExtentReportHelper.getScreenshot();
-			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-    	}catch(Exception e) {
-			e.printStackTrace();
-			test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
-		}
-    	
-    }
+    
     
     public static void VerifyMachineName() {
     	try {  
@@ -1254,18 +1266,10 @@ public class Stepdefination {
 						test.log(LogStatus.FAIL, " Either all the machines were not selected or machines are not visible after selection ");
 				}
 			}
-			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+			SaveTaskAndApplyFilter();
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");
-				Thread.sleep(2000);
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}			
@@ -1321,30 +1325,8 @@ public class Stepdefination {
 
     public static void CreateTaskWithDifferentTaskTypes(String Taskname, String Description,String dueDate,int TaskTypeIndex) {
 		try {  
-			HomePageSideBar hps = new HomePageSideBar(driver);	
+			BasicCreateTaskHalfHelper(Taskname, Description, dueDate);
 			TaskPage tp=new TaskPage(driver);
-			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
-			ButtonHelper.click(tp.createTask, "Create task button");
-			Thread.sleep(4000);
-			TextBoxHelper.enterTextString(tp.TaskName,"Task Name", Taskname);
-			DropDownHelper.selectRandomElementByIndex(tp.ServiceEngineer,"service engineer");
-			DropDownHelper.selectRandomElementByIndex(tp.SelectedAccount,"Account");
-			TextBoxHelper.enterTextString(tp.DueDate,"Due Date", dueDate);		
-			tp=new TaskPage(driver);
-			Thread.sleep(2000);
-			ButtonHelper.click(tp.EnabledWatcher, "watcher button");			
-			DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
-			Thread.sleep(2000);
-			try {
-				if(driver.switchTo().alert().getText().equalsIgnoreCase("The assignee cannot be a watcher")) {
-				driver.switchTo().alert().accept();
-				tp=new TaskPage(driver);
-				Thread.sleep(2000);			
-				DropDownHelper.selectRandomElementFromDivList(tp.WatcherList,"watcher",0);
-				}
-			}catch(NoAlertPresentException e) {				
-			}
-			TextBoxHelper.enterTextString(tp.TaskDescription,"Description", Description);
 			String data=null;
 			if(TaskTypeIndex==1)
 				data=DropDownHelper.selectElementByIndexAndGetText(tp.TaskType, "Task Type", 1);
@@ -1357,18 +1339,10 @@ public class Stepdefination {
 			ButtonHelper.click(tp.ScheduleNoneBtn, "schedule none button");
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+			SaveTaskAndApplyFilter();
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully With TaskType "+data);
-				Thread.sleep(2000);
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task With TaskType "+data);	
 			}
@@ -1408,18 +1382,10 @@ public class Stepdefination {
 		    DropDownHelper.selectRandomElementByIndex(tp.taskRepeatEndDate,"Task Repeat End Date");
 		    String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-		    ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+		    SaveTaskAndApplyFilter();
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
-				Thread.sleep(2000);
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else {
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}					
@@ -1463,18 +1429,10 @@ public class Stepdefination {
 			DropDownHelper.selectRandomElementByIndex(tp.WeeklytaskRepeatEndDate,"Task Repeat End Date");			
 			String screenshotPath = ExtentReportHelper.getScreenshot();
 			test.log(LogStatus.INFO,test.addScreenCapture(screenshotPath));
-			 ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();
+			SaveTaskAndApplyFilter();			
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
-				Thread.sleep(2000);
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else {
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}					
@@ -1538,21 +1496,10 @@ public class Stepdefination {
 				test.log(LogStatus.FAIL, "Use is not able to see all the dates after selecting schedule every month");
 			DropDownHelper.selectRandomElementByIndex(tp.selectDate, "Month repeat date");
 			DropDownHelper.selectRandomElementByIndex(tp.MonthlytaskRepeatEndDate, "task Repeat End Date");
-			ButtonHelper.click(tp.SaveCreatedTask, "Save button");
-			WebDriverWait wait = new WebDriverWait(driver, 50);
-			  wait.until(ExpectedConditions.alertIsPresent());
-			driver.switchTo().alert().accept();	
-			Thread.sleep(2000);
-			TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate);
-			Thread.sleep(2000);
+			SaveTaskAndApplyFilter();
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(Taskname)) {
 				test.log(LogStatus.PASS, "User was able to create new task successfully");	
-				Thread.sleep(2000);
-				tp.DeleteTask.click();			
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
-				driver.switchTo().alert().accept();
-				Thread.sleep(2000);
+				DeleteTaskWithoutMessage();
 			}else {
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}					
@@ -1947,14 +1894,20 @@ public class Stepdefination {
 			TaskPage tp=new TaskPage(driver);
 			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
 			ButtonHelper.click(tp.createTask, "Create task button");
-			if(schedule.equalsIgnoreCase("monthly"))
-			 ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule Monthly Button");
-			if(schedule.equalsIgnoreCase("weekly"))
+			 int size1=0;
+			if(schedule.equalsIgnoreCase("monthly")) {
+				 ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule Monthly Button");
+				 size1=DropDownHelper.sizeOfSelect(tp.MonthlytaskRepeatEndDate,"Monthly task Repeat EndDate");
+			 }
+			else if(schedule.equalsIgnoreCase("weekly")) {
 				 ButtonHelper.click(tp.ScheduleWeeklyBtn, "Schedule weekly Button");
-			else
+				 size1=DropDownHelper.sizeOfSelect(tp.WeeklytaskRepeatEndDate,"weekly task Repeat EndDate");
+			 }else {
 				 ButtonHelper.click(tp.ScheduleDailyBtn, "Schedule Daily Button");
+				 size1=DropDownHelper.sizeOfSelect(tp.taskRepeatEndDate,"Daily task Repeat EndDate");
+			 }
 			boolean check=true;			 
-			for(int i=1;i<=DropDownHelper.sizeOfSelect(tp.MonthlytaskRepeatEndDate,"Monthly task Repeat EndDate");i++) {
+			for(int i=1;i<=size1;i++){
 				String startDate=null;
 				if(schedule.equalsIgnoreCase("monthly"))
 					startDate=DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", i-1);
@@ -1984,6 +1937,88 @@ public class Stepdefination {
     	
     }
     
+    public static void checkEndDateAreQuaterBasis(String schedule) {
+    	try { 
+    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy");
+			LocalDateTime now = LocalDateTime.now();
+			Date first = sdf.parse("31/03/"+dtf.format(now));				
+			Date first1 = sdf.parse("30/06/"+dtf.format(now));				
+			Date first2 = sdf.parse("31/08/"+dtf.format(now));				
+			Date first3 = sdf.parse("31/12/"+dtf.format(now));
+			boolean check=false;
+			HomePageSideBar hps = new HomePageSideBar(driver);	
+			TaskPage tp=new TaskPage(driver);
+			ButtonHelper.click(hps.Tasks, "Task Button on sidebar");
+			ButtonHelper.click(tp.createTask, "Create task button");
+			 int size1=0;
+			if(schedule.equalsIgnoreCase("monthly")) {
+				 ButtonHelper.click(tp.ScheduleMonthlyBtn, "Schedule Monthly Button");
+				 size1=DropDownHelper.sizeOfSelect(tp.MonthlytaskRepeatEndDate,"Monthly task Repeat EndDate");
+				 if(size1==4){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 0)).equals(first)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==3) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==2) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==1){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.MonthlytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else {
+						check =false;
+					}
+			}else if(schedule.equalsIgnoreCase("weekly")) {
+				 ButtonHelper.click(tp.ScheduleWeeklyBtn, "Schedule weekly Button");
+				 size1=DropDownHelper.sizeOfSelect(tp.WeeklytaskRepeatEndDate,"weekly task Repeat EndDate");
+				 if(size1==4){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 0)).equals(first)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==3) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==2) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==1){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.WeeklytaskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else {
+						check =false;
+					}
+			 }else {
+				 ButtonHelper.click(tp.ScheduleDailyBtn, "Schedule Daily Button");
+				 size1=DropDownHelper.sizeOfSelect(tp.taskRepeatEndDate,"Daily task Repeat EndDate");
+				 if(size1==4){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 0)).equals(first)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==3) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 1)).equals(first1)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==2) {
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 2)).equals(first2)&&sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else if(size1==1){
+						if(sdf.parse(DropDownHelper.selectElementByIndexAndGetText(tp.taskRepeatEndDate,"End date", 3)).equals(first3))
+							check=true;
+					}else {
+						check =false;
+					}
+			 }			
+								
+			if(check)
+				test.log(LogStatus.PASS,  "End Dates Of A "+schedule+" Repeating Task Are Quaterly Basis");
+			else
+				test.log(LogStatus.FAIL,  "End Dates Of A "+schedule+"  Repeating Task Are Not Quaterly Basis");
+    	}catch(Exception e){
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }  
+    	
+    }
+    
     public static void uploadExcelVerifyFeilds(String dueDate1) {
     	try {
     		FillSampleExcel();   					
@@ -1998,11 +2033,12 @@ public class Stepdefination {
 			int num=DropDownHelper.findIndexOfTextElement(se.AllSeviceEngineersPhone,ExcelReader.ReadSampleExcel("data","Service_engineer_number"));
 			String engineername=se.AllSeviceEngineersNames.get(num).getText();
 			System.out.println(engineername);
+			driver.navigate().refresh();
 			hps.Tasks.click();
 			TaskPage tp=new TaskPage(driver);
-			Thread.sleep(4000);
+			Thread.sleep(10000);
 			TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date", dueDate1);	
-			Thread.sleep(8000);
+			Thread.sleep(10000);
 			if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
 				test.log(LogStatus.PASS, "Task name present on application after creating a task is same as in uploaded excel");	
 				if(tp.verifyServiceEngineerName.getText().equalsIgnoreCase(engineername))
@@ -2012,8 +2048,12 @@ public class Stepdefination {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				String startDate = tp.verifyDueDate.getText();
 				String endDate = ExcelReader.ReadSampleExcel("data","Due_date");
-				Date start = sdf.parse(startDate);			
+				System.out.println(ExcelReader.ReadSampleExcel("data","Due_date"));
+				Date start = sdf.parse(startDate);
+				System.out.println(start);
+				sdf = new SimpleDateFormat("yyyy/MM/dd");
 				Date end = sdf.parse(endDate);
+				System.out.println(end);
 				if(start.equals(end))
 					test.log(LogStatus.PASS, "Due Date present on application after creating a task is same as in uploaded excel");
 				else
@@ -2030,12 +2070,7 @@ public class Stepdefination {
 					test.log(LogStatus.PASS, "Add comment button is displayed");
 				else
 					test.log(LogStatus.FAIL, "Add comment button is not displayed");
-				WebDriverWait wait = new WebDriverWait(driver, 50);	
-				tp.DeleteTask.click();			
-				wait.until(ExpectedConditions.alertIsPresent());
-				driver.switchTo().alert().accept();
-				wait.until(ExpectedConditions.alertIsPresent());
-				driver.switchTo().alert().accept();
+				DeleteTaskWithoutMessage();
 			}else {
 					test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}							
@@ -2048,19 +2083,11 @@ public class Stepdefination {
     public static void CreatTaskVerifyFeilds() {
     	try {
     		 BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
-    		 TaskPage tp1=new TaskPage(driver);
-    		 String Text1=DropDownHelper.selectRandomElementByIndexAndGetText(tp1.ServiceEngineer,"service engineer");
-    		 String Text2=DropDownHelper.selectRandomElementByIndexAndGetText(tp1.SelectedAccount,"Account");
-    		 ButtonHelper.click(tp1.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			 wait.until(ExpectedConditions.alertIsPresent());
-			 driver.switchTo().alert().accept();
-			 Thread.sleep(4000);
-			 driver.navigate().refresh();
-			 Thread.sleep(4000);
-			 TaskPage tp=new TaskPage(driver);
- 			 TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date",ExcelReader.ReadTestData("duedate") );
- 			 Thread.sleep(4000);
+    		 TaskPage tp=new TaskPage(driver);
+    		 String Text1=DropDownHelper.selectRandomElementByIndexAndGetText(tp.ServiceEngineer,"service engineer");
+    		 String Text2=DropDownHelper.selectRandomElementByIndexAndGetText(tp.SelectedAccount,"Account");
+    		 SaveTaskAndApplyFilter();
+    		 tp=new TaskPage(driver);
  			 if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
  				test.log(LogStatus.PASS, "Task name present on application after creating a task is same as by entered user");	
  				if(tp.verifyServiceEngineerName.getText().equalsIgnoreCase(Text1))
@@ -2087,45 +2114,31 @@ public class Stepdefination {
  				if(tp.addComment.isEnabled())
  					test.log(LogStatus.PASS, "Add comment button is displayed");
  				else
- 					test.log(LogStatus.FAIL, "Add comment button is not displayed");	
- 				tp.DeleteTask.click();			
- 				wait.until(ExpectedConditions.alertIsPresent());
- 				driver.switchTo().alert().accept();
- 				wait.until(ExpectedConditions.alertIsPresent());
- 				driver.switchTo().alert().accept();
+ 					test.log(LogStatus.FAIL, "Add comment button is not displayed");
+ 				DeleteTaskWithoutMessage();
  			}else {
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
- 			}	
+ 			}
     	}catch(Exception e) {
 	    	e.printStackTrace();
 	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 	    }
     }
+    
+ 
+    
     public static void verifyTaskStatus() {
     	try {
     		BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
-    		 TaskPage tp1=new TaskPage(driver);
-    		 ButtonHelper.click(tp1.SaveCreatedTask, "Save button");
-			 WebDriverWait wait = new WebDriverWait(driver, 50);
-			 wait.until(ExpectedConditions.alertIsPresent());
-			 driver.switchTo().alert().accept();
-			 Thread.sleep(4000);
-			 driver.navigate().refresh();
-			 Thread.sleep(4000);
-			 TaskPage tp=new TaskPage(driver);
- 			 TextBoxHelper.enterTextString(tp.DateFilter, "Filter Date",ExcelReader.ReadTestData("duedate") );
- 			 Thread.sleep(4000);
+    		SaveTaskAndApplyFilter();
+    		TaskPage tp=new TaskPage(driver);
  			 if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){
  				 test.log(LogStatus.PASS, "User Was Able To Create Task Successfully");
  				 if(tp.VerifyTaskStatus.getText().equalsIgnoreCase("incomplete"))
  					 test.log(LogStatus.PASS, "Task status displayed is "+tp.VerifyTaskStatus.getText());
  				 else 
  					 test.log(LogStatus.FAIL, "Task status displayed is "+tp.VerifyTaskStatus.getText());
- 				 tp.DeleteTask.click();			
- 				 wait.until(ExpectedConditions.alertIsPresent());
- 				 driver.switchTo().alert().accept();
- 				 wait.until(ExpectedConditions.alertIsPresent());
- 				 driver.switchTo().alert().accept();
+ 				DeleteTaskWithoutMessage();
 			}else{
 				test.log(LogStatus.FAIL, "User was not able to create new task");	
 			}	
@@ -2134,4 +2147,257 @@ public class Stepdefination {
 	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
 	    }
     }
+    
+    public static void verifyalertafetDeletingTask() {
+    	try {
+    		BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+    		SaveTaskAndApplyFilter();
+    		TaskPage tp=new TaskPage(driver);
+    		ButtonHelper.click(tp.DeleteTask,"Delete Task");
+    		 WebDriverWait wait = new WebDriverWait(driver, 50);
+    		 wait.until(ExpectedConditions.alertIsPresent());
+    		 if( driver.switchTo().alert().getText().equalsIgnoreCase("Want to delete?")) {
+    			 test.log(LogStatus.PASS, "on click of delete an confrimation alert is coming with text "+"'"+ driver.switchTo().alert().getText()+"'"); 			  	
+				 driver.switchTo().alert().accept();
+				 wait.until(ExpectedConditions.alertIsPresent());
+				 driver.switchTo().alert().accept();
+    		 }else{
+    			 test.log(LogStatus.FAIL, "on click of delete No confrimation alert is coming");
+    		 }
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    
+    
+    public static void AddComment() {
+    	try {
+    		BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+    		SaveTaskAndApplyFilter();
+    		TaskPage tp=new TaskPage(driver);
+ 			 if(tp.verifyTaskName.getText().equalsIgnoreCase(ExcelReader.ReadTestData("taskname"))){				 
+ 				 test.log(LogStatus.PASS, "User Was Able To Create Task Successfully");
+ 				 ButtonHelper.click(tp.addComment, "Add Comment Button");
+ 				 TextBoxHelper.enterTextString(tp.writeComment,"comment",ExcelReader.ReadTestData("add_comment"));
+ 				 ButtonHelper.click(tp.addCommentbtnPop, "Add Comment Button On Popup"); 				 
+ 				 if(tp.VerifyComment.getText().equalsIgnoreCase(ExcelReader.ReadTestData("add_comment")))
+ 					test.log(LogStatus.PASS, "User is able to add comment to task"); 
+ 				 else
+ 					test.log(LogStatus.PASS, "User is not able to add comment to task");
+ 				ButtonHelper.click(tp.closecommentpopup, "Close Comment Popup");
+ 				DeleteTaskWithoutMessage();
+			}else{
+				test.log(LogStatus.FAIL, "User was not able to create new task");	
+			}	
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    public static void verifyDeletingTask() {
+    	try {
+    		BasicCreateTaskHalfHelper(ExcelReader.ReadTestData("taskname"),ExcelReader.ReadTestData("taskdescription"),ExcelReader.ReadTestData("duedate"));
+    		SaveTaskAndApplyFilter();
+    		TaskPage tp=new TaskPage(driver);   		
+    		 WebDriverWait wait = new WebDriverWait(driver, 50);   		 
+    		 if(tp.VerifyTaskStatus.getText().equalsIgnoreCase("incomplete")){
+    			 if(tp.DeleteTask.isEnabled()){    				 
+	    			 ButtonHelper.click(tp.DeleteTask,"Delete Task");
+	    			 wait.until(ExpectedConditions.alertIsPresent());
+	    			 test.log(LogStatus.INFO, "on click of delete an confrimation alert is coming with text "+"'"+ driver.switchTo().alert().getText()+"'"); 			  	
+					 driver.switchTo().alert().accept();
+					 wait.until(ExpectedConditions.alertIsPresent());
+					 if( driver.switchTo().alert().getText().equalsIgnoreCase("Test Task is successfully deleted.")) {
+						 test.log(LogStatus.PASS, "User Is Successfully Able delete a task whose status is incomplete"); 
+						 driver.switchTo().alert().accept();
+					 }else {
+						 test.log(LogStatus.FAIL, "User Is  Unable delete a task whose status is incomplete");
+					 }
+    			 }else {
+    				 test.log(LogStatus.FAIL, "Delete Button is Disabled"); 
+    			 }
+    		 }else{
+    			 test.log(LogStatus.FAIL, "Task Status is other than incomplete");
+    		 }
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    public static void verifyDownloadTaskButton(String TaskStatus,String window) {
+    	try {
+    		HomePageSideBar hps=new HomePageSideBar(driver);
+    		ButtonHelper.click(hps.Tasks, "Task Button");
+    		TaskPage tp=new TaskPage(driver);
+    		if(TaskStatus.equalsIgnoreCase("incomplete")) {
+    		DropDownHelper.selectElementByvalue(tp.statusFilter,"Status Filter", "incomplete");
+    		Thread.sleep(2000);
+    		if(tp.DownloadTask.isEnabled())
+    			test.log(LogStatus.FAIL, "Download Button is enabled when task status is "+TaskStatus);
+    		else
+    			test.log(LogStatus.PASS, "Download Button is Disabled when task status is "+TaskStatus);
+    		}
+    		if(TaskStatus.equalsIgnoreCase("complete")) {
+        		DropDownHelper.selectElementByvalue(tp.statusFilter,"Status Filter", "complete");
+        		Thread.sleep(2000);
+        		if(tp.DownloadTask.isEnabled())
+        			test.log(LogStatus.PASS, "Download Button is enabled when task status is "+TaskStatus);
+        		else
+        			test.log(LogStatus.FAIL, "Download Button is Disabled when task status is "+TaskStatus);
+        		String originalWindow = driver.getWindowHandle();
+        		assert driver.getWindowHandles().size() == 1;
+        		ButtonHelper.click(tp.DownloadTask, "Download Task");
+        		
+        		for (String windowHandle : driver.getWindowHandles()) {
+        		    if(!originalWindow.contentEquals(windowHandle)) {
+        		        driver.switchTo().window(windowHandle);
+        		        break;
+        		    }
+        		}
+        		String str = driver.getCurrentUrl();
+        		System.out.println(str);
+        		if(str.contains("Solcare_Visit_Report"))
+        			test.log(LogStatus.PASS, "Download Button is enabled And user Is Able To Download File");
+        		else
+        			test.log(LogStatus.FAIL, "Download Button is enabled And user Is Not Able To Download File");
+        		if(window.equalsIgnoreCase("checkwindow")) {
+        			ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
+        			System.out.println("No. of tabs: " + tabs.size());
+        				if(tabs.size()==2)
+        					test.log(LogStatus.PASS, " Download File Open in a new window with title "+"'"+driver.getWindowHandle()+"'");
+        				else
+        					test.log(LogStatus.FAIL, "Download Button is enabled And user Is Not Able To Download File");
+        		}
+    		}
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    public static void EditTaskenabled() {
+    	try {   		
+    		HomePageSideBar hps=new HomePageSideBar(driver);
+    		TaskPage tp=new TaskPage(driver); 
+    		ButtonHelper.click(hps.Tasks, "Task Button");
+    		 		    
+    		DropDownHelper.selectElementByvalue(tp.statusFilter,"Status Filter", "incomplete");
+    		
+    		if(tp.VerifyTaskStatus.getText().equalsIgnoreCase("incomplete")){
+    		if(tp.editTask.isEnabled())
+    			test.log(LogStatus.PASS, "edit task Button is enabled when task status is "+tp.VerifyTaskStatus.getText());
+    		else
+    			test.log(LogStatus.FAIL, "edit task Button is Disabled when task status is "+tp.VerifyTaskStatus.getText());
+    		}    	  		
+    		
+    		TaskPage tp1=new TaskPage(driver);
+    		  		
+    		DropDownHelper.selectElementByvalue(tp1.statusFilter,"Status Filter", "overdue");
+    		 		
+    		if(tp1.VerifyTaskStatus.getText().equalsIgnoreCase("incomplete")){
+    		if(tp1.editTask.isEnabled())
+    			test.log(LogStatus.PASS, "edit task Button is enabled when task status is "+tp1.VerifyTaskStatus.getText());
+    		else
+    			test.log(LogStatus.FAIL, "edit task Button is Disabled when task status is "+tp1.VerifyTaskStatus.getText());
+    		}  
+    		TaskPage tp3=new TaskPage(driver);  		
+    		DropDownHelper.selectElementByvalue(tp3.statusFilter,"Status Filter", "complete");
+    		
+    		if(tp3.VerifyTaskStatus.getText().equalsIgnoreCase("complete")){
+    		if(tp3.editTask.isEnabled())
+    			test.log(LogStatus.FAIL, "edit task Button is enabled when task status is "+tp3.VerifyTaskStatus.getText());
+    		else
+    			test.log(LogStatus.PASS, "edit task Button is Disabled when task status is "+tp3.VerifyTaskStatus.getText());
+    		}
+    		TaskPage tp4=new TaskPage(driver);
+    		
+    		DropDownHelper.selectElementByvalue(tp4.statusFilter,"Status Filter", "pending");
+    		Thread.sleep(4000);
+    		System.out.println(tp4.VerifyTaskStatus.getText());
+    		if(tp4.VerifyTaskStatus.getText().contains("pending")){
+        		if(tp4.editTask.isEnabled())
+        			test.log(LogStatus.FAIL, "edit task Button is enabled when task status is "+tp4.VerifyTaskStatus.getText());
+        		else
+        			test.log(LogStatus.PASS, "edit task Button is Disabled when task status is "+tp4.VerifyTaskStatus.getText());
+        		}
+    		
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }
+    
+    
+    
+    public static void EditTaskpopdisplayed() {
+    	try {
+    		HomePageSideBar hps=new HomePageSideBar(driver);
+    		ButtonHelper.click(hps.Tasks, "Task Button");
+    		TaskPage tp=new TaskPage(driver);  		    
+    		DropDownHelper.selectElementByvalue(tp.statusFilter,"Status Filter", "incomplete");
+    		Thread.sleep(2000);
+    		if(tp.editTask.isEnabled()) {
+    			test.log(LogStatus.PASS, "edit task Button is enabled when task status is "+tp.VerifyTaskStatus.getText());
+    			ButtonHelper.click(tp.editTask, "edit task button");
+    			Thread.sleep(2000);
+    			if(tp.editTaskName.isDisplayed())
+    				test.log(LogStatus.PASS, "edit task popup Is Displayed After Clicking On Edit TasK Button");
+    			else
+    				test.log(LogStatus.PASS, "edit task popup Is Not Displayed After Clicking On Edit TasK Button");
+    		}else {
+    			test.log(LogStatus.FAIL, "edit task Button is Disabled when task status is "+tp.VerifyTaskStatus.getText());
+    		}
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }	
+    
+    public static void EditTaskpopCloses() {
+    	try {
+    		EditTaskpopdisplayed();
+    		TaskPage tp =new TaskPage(driver);
+    		ButtonHelper.click(tp.closeEditPopup, "Edit PopUp Close Button");
+    		if(tp.createTask.isDisplayed())
+    			test.log(LogStatus.PASS,"After clicking On The Close Buttton User Is Able Close The Edit Task Window");
+    		else
+    			test.log(LogStatus.PASS,"After clicking On The Close Buttton User Is Not Able Close The Edit Task Window");
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }	
+    
+    public static void EditTaskpopFeilds() {
+    	try {
+    		HomePageSideBar hps=new HomePageSideBar(driver);
+    		ButtonHelper.click(hps.Tasks, "Task Button");
+    		TaskPage tp=new TaskPage(driver);  		    
+    		DropDownHelper.selectElementByvalue(tp.statusFilter,"Status Filter", "incomplete");
+    		Thread.sleep(2000);
+    		if(tp.editTask.isEnabled()) {
+    			test.log(LogStatus.PASS, "edit task Button is enabled when task status is "+tp.VerifyTaskStatus.getText());
+    			ButtonHelper.click(tp.editTask, "edit task button");
+    			Thread.sleep(2000);
+    			if(tp.editSelectedAccount.isEnabled()&&tp.editTaskName.isEnabled()&&tp.editTaskType.isEnabled()&&tp.editWatcherGroup.isEnabled())
+    				test.log(LogStatus.PASS, "ALL Fields except Schedule are editable");
+    			else
+    				test.log(LogStatus.FAIL, "One or More Fields except Schedule are Not editable");
+    			if(tp.editDailyBtn.isEnabled()||tp.editMonthlyBtn.isEnabled()||tp.editNoneBtn.isEnabled()||tp.editWeeklyBtn.isEnabled())
+    				test.log(LogStatus.FAIL, "Schedule Of Task Is  editable");
+    			else
+    				test.log(LogStatus.PASS, "Schedule Of Task Is not editable");
+    		}else {
+    			test.log(LogStatus.FAIL, "edit task Button is Disabled when task status is "+tp.VerifyTaskStatus.getText());
+    		}
+    	}catch(Exception e) {
+	    	e.printStackTrace();
+	    	test.log(LogStatus.FAIL, "Exception while executing test :"+e.getMessage());
+	    }
+    }	
+    
 }

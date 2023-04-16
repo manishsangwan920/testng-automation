@@ -37,10 +37,16 @@ public class BaseTest {
 		LocalDateTime now = LocalDateTime.now(); 
 		LocalDateTime Date = now.plusDays(4);
 		ExcelReader.updateTestDataExcel("duedate",dtf.format(Date));
+		
+		
+		
 	}
 	
 	@BeforeMethod
 	public void beforeTest(Method testMethod) throws Exception {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+		LocalDateTime now1 = LocalDateTime.now();
+		ExcelReader.updateTestDataExcel("taskname","Test Task"+dtf.format(now1));
 		System.out.println("Executing Test");
 		ExtentReportHelper.startTest(testMethod.getName());
 		System.out.println("Launching "+browser+" browser");

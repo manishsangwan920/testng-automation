@@ -165,6 +165,50 @@ public class TaskPage extends PageBase {
 	public  WebElement verifySelectedMachine ;
 	
 	//create task pop up ends
+	
+	//edit task pop up start
+	
+	@FindBy(id = "editTaskName")
+	@CacheLookup
+	public WebElement editTaskName;
+
+	@FindBy(id = "editDueDate")
+	@CacheLookup
+	public WebElement editDueDate;
+	
+	@FindBy(id = "editSelectedAccount")
+	@CacheLookup
+	public WebElement editSelectedAccount;
+	
+	@FindBy(id = "editWatcherGroup")
+	@CacheLookup
+	public WebElement editWatcherGroup;
+	
+	@FindBy(id = "editTaskType")
+	@CacheLookup
+	public WebElement editTaskType;
+	
+	@FindBy(id = "editNoneBtn")
+	@CacheLookup
+	public WebElement editNoneBtn;
+	
+	@FindBy(id = "editDailyBtn")
+	@CacheLookup
+	public WebElement editDailyBtn;
+	
+	@FindBy(id = "editWeeklyBtn")
+	@CacheLookup
+	public WebElement editWeeklyBtn;
+	
+	@FindBy(id = "editMonthlyBtn")
+	@CacheLookup
+	public WebElement editMonthlyBtn;
+
+	@FindBy(xpath = "//*[@id=\"EditTask\"]/div/div/div[1]/button")
+	@CacheLookup
+	public WebElement closeEditPopup;
+	
+	//edit task pop up ends
 		
 	@FindBy(xpath = "//tbody[@id='reRender']/tr[1]/td[1]")
 	@CacheLookup
@@ -196,14 +240,30 @@ public class TaskPage extends PageBase {
 	
 	@FindBy(id = "comment")
 	@CacheLookup
-	public List<WebElement> writeComment;
-		
+	public WebElement writeComment;
+	
+	@FindBy(id = "commentBtn")
+	@CacheLookup
+	public WebElement addCommentbtnPop;
+	
+	@FindBy(xpath = "//*[@id=\"AddComment\"]/div/div/div[1]/button")
+	@CacheLookup
+	public  WebElement closecommentpopup;
+	
 	@FindBy(xpath = "//*[@id=\"reRender\"]/tr[1]/td[7]/button[3]")
 	@CacheLookup
 	public  WebElement DeleteTask;
 	
 	
+	@FindBy(xpath = "//*[@id=\"reRender\"]/tr[1]/td[7]/button[1]")
+	@CacheLookup
+	public  WebElement editTask;
 	
+	
+	@FindBy(xpath = "//*[@id=\"reRender\"]/tr[1]/td[7]/button[2]")
+	@CacheLookup
+	public  WebElement DownloadTask;
+		
 	@FindBy(xpath = "//*[@id='Instruction_Task_Excel']/div/div/div/button[@class='close']")
 	@CacheLookup
 	public  WebElement CloseDownloadExcel;	
@@ -244,4 +304,9 @@ public class TaskPage extends PageBase {
 	@FindBy(xpath = "//button[@onclick='resetData()']")
 	@CacheLookup
 	public  WebElement ResetFilters;
+	
+
+	@FindBy(id = "taskdrop")
+	@CacheLookup
+	public  WebElement statusFilter;
 }
