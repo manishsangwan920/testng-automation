@@ -18,10 +18,6 @@ import utility.ResourceHelper;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2020-04-15
-********************************************************************************************************/
 
 public class ExtentReportHelper {
 	

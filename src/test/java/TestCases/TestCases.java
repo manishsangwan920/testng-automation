@@ -29,10 +29,6 @@ import settings.ObjectRepo;
 import stepdefination.Stepdefination;
 
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-*
-********************************************************************************************************/
 
 //close testdata.xlsx and task_sample.xlsx before executing test cases;
 public class TestCases extends BaseTest {

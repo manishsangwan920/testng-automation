@@ -8,10 +8,6 @@ import interfaces.IconfigReader;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2016-04-15
-********************************************************************************************************/
 
 public class ObjectRepo {
 	public static WebDriver driver;

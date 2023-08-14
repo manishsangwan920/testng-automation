@@ -19,11 +19,6 @@ import settings.ObjectRepo;
 import com.relevantcodes.extentreports.LogStatus;
 
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2020-04-15
-********************************************************************************************************/
-
 public class GenericHelper {
 
 	public static String getTestData(String var) {

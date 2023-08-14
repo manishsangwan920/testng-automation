@@ -16,10 +16,6 @@ import  reporting.ExtentReportHelper;
 import  settings.ObjectRepo;
 import com.relevantcodes.extentreports.LogStatus;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2016-04-15
-********************************************************************************************************/
 
 public class ButtonHelper{
 	

@@ -8,10 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import elementhelper.ButtonHelper;
 import elementhelper.TextBoxHelper;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2016-04-15
-********************************************************************************************************/
+
 
 public class LoginPage extends PageBase {
 	private WebDriver driver;

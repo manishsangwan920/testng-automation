@@ -15,10 +15,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import settings.ObjectRepo;
 import com.relevantcodes.extentreports.LogStatus;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2020-04-15
-********************************************************************************************************/
 
 public class ExcelReader {
 	

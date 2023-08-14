@@ -14,10 +14,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import utility.ResourceHelper;
 
-/*******************************************************************************************************
-* @author  Shafkat Mustafa
-* @since   2016-04-15
-********************************************************************************************************/
+
 
 public class FirefoxBrowser {
 	

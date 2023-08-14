@@ -17,10 +17,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
-/*******************************************************************************************************
-* @author  Shafkat Mustafa
-* @since   2016-04-15
-********************************************************************************************************/
 
 @SuppressWarnings("rawtypes")
 public abstract class PageBase{

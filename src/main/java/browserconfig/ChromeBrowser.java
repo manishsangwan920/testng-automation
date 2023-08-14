@@ -12,10 +12,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2020-04-15
-********************************************************************************************************/
 
 public class ChromeBrowser {
 

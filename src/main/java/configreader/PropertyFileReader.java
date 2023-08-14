@@ -8,10 +8,7 @@ import settings.ObjectRepo;
 import utility.ResourceHelper;
 import com.google.j2objc.annotations.ReflectionSupport.Level;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2016-04-15
-********************************************************************************************************/
+
 
 public class PropertyFileReader implements IconfigReader {
 	

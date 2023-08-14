@@ -11,10 +11,6 @@ import settings.ObjectRepo;
 import com.mongodb.diagnostics.logging.Logger;
 import com.relevantcodes.extentreports.LogStatus;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2020-04-15
-********************************************************************************************************/
 
 public class TextBoxHelper {
 	
