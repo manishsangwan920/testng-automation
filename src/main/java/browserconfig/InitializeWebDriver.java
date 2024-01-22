@@ -19,9 +19,9 @@ public class InitializeWebDriver {
 	public WebDriver standAloneStepUp(BrowserType bType) throws Exception {
 		try {
 			switch (bType) {
-
+			
 			case Chrome:
-				ChromeBrowser chrome = ChromeBrowser.class.newInstance();
+				ChromeBrowser chrome = new ChromeBrowser();
 					return chrome.getChromeDriver(chrome.getChromeCapabilities());
 			case RemoteChrome:
 				RemoteChromeBrowser remotechrome = new RemoteChromeBrowser();

@@ -62,9 +62,6 @@ public class PropertyFileReader implements IconfigReader {
 		return Integer.parseInt(prop.getProperty("ExplicitWait"));
 	}
 	
-	public int getWaitForAnswer() {
-		return Integer.parseInt(prop.getProperty("WaitForAnswer"));
-	}
 	
 	
 	

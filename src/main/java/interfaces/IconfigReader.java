@@ -1,9 +1,5 @@
 package interfaces;
 
-/*******************************************************************************************************
-* @author  Vikas Sangwan
-* @since   2016-04-15
-********************************************************************************************************/
 
 
  public interface IconfigReader {
@@ -16,7 +12,7 @@ package interfaces;
 	public String getExecutionEnv();
 	public String getReportOverwrite();
 	public String getRemoteExecutionEnvURL();
-	public int getWaitForAnswer();
+	
 	
 }
  
